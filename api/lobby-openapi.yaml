@@ -1,0 +1,167 @@
+---
+openapi: 3.0.0
+info:
+  title: Simple Inventory API
+  description: This is a simple API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/anserjan/Lobby/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: developers
+  description: Operations available to regular developers
+paths:
+  /lobbies:
+    post:
+      description: creates lobby
+      responses:
+        "201":
+          description: lobby created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "400":
+          description: invalid user
+        "500":
+          description: server error
+  /lobbies/{lobbyId}:
+    get:
+      description: get specific lobby, register as lobbymember
+      parameters:
+      - name: lobbyId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "201":
+          description: lobby found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lobby'
+        "401":
+          description: unauthorized
+        "404":
+          description: lobby not found
+    put:
+      description: update lobby
+      parameters:
+      - name: lobbyId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: data to update gamemode
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lobby'
+        required: true
+      responses:
+        "200":
+          description: lobby successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lobby'
+        "401":
+          description: unauthorized
+        "404":
+          description: lobby not found
+    delete:
+      description: delete lobby
+      parameters:
+      - name: lobbyId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: lobby deleted
+        "401":
+          description: unauthorized
+        "404":
+          description: lobby not found
+  /lobbies/{lobbyId}/leave:
+    get:
+      description: remove leaving user from list
+      parameters:
+      - name: lobbyId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: lobby successfully left
+        "401":
+          description: unauthorized
+        "404":
+          description: lobby not found
+components:
+  schemas:
+    Lobby:
+      type: object
+      properties:
+        lobbyId:
+          type: integer
+        Gamemode:
+          $ref: '#/components/schemas/Gamemode'
+        magick_link:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+        name:
+          type: string
+    Gamemode:
+      type: object
+      properties:
+        gamemodeId:
+          type: integer
+        huntedUserId:
+          type: integer
+        updatedAt:
+          type: string
+        maximumUsers:
+          type: integer
+        gameBorders:
+          type: array
+          items:
+            type: number
+            format: double
+        gametime:
+          type: string
+          format: date-time
+    inline_response_201:
+      type: object
+      properties:
+        lobby_id:
+          type: integer
+        magick_link:
+          type: string
