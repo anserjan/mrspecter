@@ -1,3 +1,5 @@
+[![pipeline status](../../../badges/main/pipeline.svg)](../../../pipelines/latest)
+
 # Backend
 
 
