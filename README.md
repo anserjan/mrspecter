@@ -18,13 +18,19 @@ The rest of the group tries to catch the Mr. Specter within the set time and the
 Setup local repository
 ```
 git init
+```
+```
 git clone https://gitlab.bht-berlin.de/mr-specter/backend.git
+```
+```
 cd ./backend
 ```
 
 Install dependencies and start Node.js server via npm
 ```
 npm i
+```
+```
 npm start
 ```
 
