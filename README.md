@@ -17,9 +17,6 @@ The rest of the group tries to catch the Mr. Specter within the set time and the
 
 Setup local repository
 ```
-git init
-```
-```
 git clone https://gitlab.bht-berlin.de/mr-specter/backend.git
 ```
 ```
