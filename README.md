@@ -4,7 +4,7 @@
 
 
 ## Name
-Mr. Specter Backend
+MrSpecter Backend
 
 ## Description
 Node.js REST Server for the mobilegame Mr. Specter. This Server manages the gps-location exchange and users.
@@ -13,19 +13,32 @@ Group of player meet and join a lobby.
 A user's role is that of the fleeing Mr.Specter, whose location is broadcast to all other users at a defined interval.
 The rest of the group tries to catch the Mr. Specter within the set time and the defined radius.
 
-## Installation
+## Setup
+
+Setup local repository
+```
+git init
+git clone https://gitlab.bht-berlin.de/mr-specter/backend.git
+cd ./backend
+```
+
+Install dependencies and start Node.js server via npm
+```
+npm i
+npm start
+```
 
 ## Support
 
 ## Contributing
 
 ## Authors and acknowledgment
-Anser Janczyk 916834
-Mike Bewersdorf 861414
-Sami Tondl 916882
-Sophie Brenneisen 896873
-Joshua Dürr 914134
-Aaron Friesel 912960
+* Anser Janczyk 916834
+* Mike Bewersdorf 861414
+* Sami Tondl 916882
+* Sophie Brenneisen 896873
+* Joshua Dürr 914134
+* Aaron Friesel 912960
 
 ## License
 For open source projects, say how it is licensed.
