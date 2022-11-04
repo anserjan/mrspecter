@@ -1,26 +1,16 @@
 ---
 openapi: 3.0.0
 info:
-  title: Simple Inventory API
-  description: This is a simple API
-  contact:
-    email: you@your-company.com
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: MrSpecter Lobby API
+  description: Lobby API
   version: 1.0.0
 servers:
 - url: https://virtserver.swaggerhub.com/anserjan/Lobby/1.0.0
   description: SwaggerHub API Auto Mocking
-tags:
-- name: admins
-  description: Secured Admin-only calls
-- name: developers
-  description: Operations available to regular developers
 paths:
   /lobbies:
     post:
-      description: creates lobby
+      summary: Creates lobby
       responses:
         "201":
           description: lobby created
@@ -34,7 +24,7 @@ paths:
           description: server error
   /lobbies/{lobbyId}:
     get:
-      description: get specific lobby, register as lobbymember
+      summary: Get specific lobby, register in lobbylist
       parameters:
       - name: lobbyId
         in: path
@@ -55,7 +45,7 @@ paths:
         "404":
           description: lobby not found
     put:
-      description: update lobby
+      summary: Update lobby
       parameters:
       - name: lobbyId
         in: path
@@ -83,7 +73,7 @@ paths:
         "404":
           description: lobby not found
     delete:
-      description: delete lobby
+      summary: Delete lobby
       parameters:
       - name: lobbyId
         in: path
@@ -101,7 +91,7 @@ paths:
           description: lobby not found
   /lobbies/{lobbyId}/leave:
     get:
-      description: remove leaving user from list
+      summary: Remove user from lobby list
       parameters:
       - name: lobbyId
         in: path
