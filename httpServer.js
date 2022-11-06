@@ -1,5 +1,6 @@
 const express = require('express');
 const testRoutes = require("./endpoints/test/testRoutes")
+const database = require('./database/db')
 
 const app = express();
 const port = 8080
