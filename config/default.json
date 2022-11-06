@@ -1,0 +1,9 @@
+{
+    "db": {
+        "connectionString": "mongodb://localhost:27017/database",
+        "connectionOptions": {
+            "useNewUrlParser": true,
+            "useUnifiedTopology": true
+        }
+    }
+}

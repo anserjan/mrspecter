@@ -11,6 +11,14 @@ app.use(express.json()) // for parsing application/json
 
 app.use('/', testRoutes);
 
+database.initDb(function(err, db){
+    if(db){
+        console.log("Datenbank laeuft")
+    }
+    else{
+        console.log("ERROR: "+err)
+    }
+})
 
 
 app.listen(port, () => console.log(`Example app listening on http://localhost:${port}!`))
