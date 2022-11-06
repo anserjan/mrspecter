@@ -5,5 +5,8 @@
             "useNewUrlParser": true,
             "useUnifiedTopology": true
         }
+    },
+    "session": {
+        "tokenKey": "changeWhenDeployed"
     }
 }
