@@ -18,6 +18,7 @@ app.use('/user', userRoutes)
 database.initDb(function(err, db){
     if(db){
         console.log("Datenbank laeuft")
+        startExpressServer()
     }
     else{
         console.log("ERROR: "+err)
@@ -25,5 +26,9 @@ database.initDb(function(err, db){
 })
 
 
-app.listen(port, () => console.log(`Example app listening on http://localhost:${port}!`))
+function startExpressServer(){
+    app.listen(port, () => console.log(`Example app listening on http://localhost:${port}!`))
+}
+
+
 // server.listen(443,() => console.log(`HttpServer listening on https://localhost!`));
