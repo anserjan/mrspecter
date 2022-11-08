@@ -1,6 +1,7 @@
 var userService = require('./userService')
 var jwt = require("jsonwebtoken");
-var config = require("config")
+var config = require("config");
+const User = require('./userModel');
 
 function createSessionToken(user, callback) {
     console.log("AuthenticationService: create Token");
@@ -23,10 +24,16 @@ function isAuthenticated(req, res, next){
         jwt.verify(token, privateKey, {algorithm : "HS256"}, (err, user)=> {
             if (err) {
                 return res.status(401).json({error: "Nicht authorisiert"})
-            }else if(user._id != req.params.userID){
-                return res.status(401).json({error: "Cannot change data of another user"})
             }
-            return next();
+            // else if(user._id != req.params.userID){
+            //     return res.status(401).json({error: "Cannot change data of another user"})
+            // }
+            User.findById(user._id, (err, result) => {
+                if(!result){ return res.status(401).json({error: "User doesn't exist anymore"}) }
+                req.authenticatedUser = {id:user._id, name: user.userName}
+                return next();
+            })
+            
         });
     }else{
         return res.status(401).json({error: "Authorization header missing"})

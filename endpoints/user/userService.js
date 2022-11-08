@@ -27,21 +27,20 @@ function createUser(req, res, callback){
                     const { id, userName, ...partialobject } = user;
                     const subset = { id, userName, auth_token:token};
                     console.log(JSON.stringify(subset))
-                    res.status(200).json(subset)
-                    
+                    return callback(null, subset)
                 }
                 else {
                     console.log("Token has not been created, Error: " + err);
                     return callback('Username or password wrong' + userID, null)
                 }
             })
-            return callback(null, user)
+            
         }
     })
 }
 
 function updateUser(req, callback) {
-    console.log(req);
+    if(req.params.userID != req.authenticatedUser.id){ return callback("Cannot change data of another user", null) }
     User.findById(req.params.userID, function(err, user) {
         if(!user){
             console.log('Kein user gefunden mit: '+req.params.userID);

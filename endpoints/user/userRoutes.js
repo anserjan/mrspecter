@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const userService = require("./userService")
-const authenticationService = require("./AuthenticationService")
+const {isAuthenticated} = require("./AuthenticationService")
 
 
 router.get('/:userID', (req, res, next) => {
@@ -26,6 +26,7 @@ router.post('/', (req, res, next) => {
         userService.createUser(req, res, function(err, result){
             console.log("Result: " + result)
             if(result){
+                res.status(200).json(result)
             }else{
                 res.status(400).json({"Error": err})
             }
@@ -33,7 +34,7 @@ router.post('/', (req, res, next) => {
     }
 });
 
-router.put('/:userID', authenticationService.isAuthenticated,(req, res, next) => {
+router.put('/:userID', isAuthenticated,(req, res, next) => {
     userService.updateUser(req, function(err, result){
         console.log("Result: " + result)
         if(result){
@@ -46,12 +47,13 @@ router.put('/:userID', authenticationService.isAuthenticated,(req, res, next) =>
     })
 });
 
-router.delete('/:userID', authenticationService.isAuthenticated, (req, res, next) => {
+router.delete('/:userID', isAuthenticated, (req, res, next) => {
     userService.deleteUser(req, function(err, result){
         console.log("Result: " + result)
         if(result){
             res.status(200).json()
         }else{
+            //Should never happen
             res.status(400).json({"Error": err})
         }
     })
