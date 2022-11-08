@@ -6,7 +6,7 @@ module.exports = {
     "default",
     ["jest-junit", { suiteNameTemplate: "{filename}" }],
   ],
-  testPathIgnorePatterns: ["<rootDir>/dist/", "<rootDir>/node_modules/"],
-  collectCoverageFrom: ['<rootDir>/src/**/*.{ts,js,jsm,tsx,jsx,tsm}'],
+  testPathIgnorePatterns: ["<rootDir>/node_modules/"],
+  collectCoverageFrom: ['<rootDir>/endpoints/**/*.{ts,js,jsm,tsx,jsx,tsm}', '<rootDir>/httpServer.js'],
   coveragePathIgnorePatterns: ["<rootDir>/dist/", "<rootDir>/node_modules/", "<rootDir>/tests/"]
 };
