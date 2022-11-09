@@ -1,5 +1,5 @@
 [![pipeline status](../../../badges/main/pipeline.svg)](../../../pipelines/latest)
-
+[![pipeline status](../../../badges/main/coverage.svg)](../../../pipelines/latest)
 # Backend
 
 
