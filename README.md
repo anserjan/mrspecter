@@ -15,7 +15,7 @@ The rest of the group tries to catch the Mr. Specter within the set time and the
 
 ## Setup
 
-Setup local repository
+#### Setup local repository
 ```
 git clone https://gitlab.bht-berlin.de/mr-specter/backend.git
 ```
@@ -23,10 +23,30 @@ git clone https://gitlab.bht-berlin.de/mr-specter/backend.git
 cd ./backend
 ```
 
-Install dependencies and start Node.js server via npm
+Install dependencies
 ```
-npm i
+npm install
 ```
+
+
+Run tests (Doesn't need a MongoDB database setup as it uses the [MongoDB In-Memory Server](https://github.com/nodkz/mongodb-memory-server))
+
+```
+npm test
+```
+
+**Production Like Environment**:
+
+If you want to start the main app and store data in a real database you need to install mongodb and start a server:
+
+[MongoDB install instructions](https://www.mongodb.com/docs/manual/administration/install-community/)
+
+start MongoDB (system specific instruction -> link above), this example shows the M1 Mac brew version run in the foreground
+```
+mongod --config /opt/homebrew/etc/mongod.conf
+```
+
+Then you can start the main Node.js server via npm
 ```
 npm start
 ```
