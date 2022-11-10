@@ -1,5 +1,6 @@
 // Lege Test User an
 ###
+# @name loginInfo
 POST http://localhost:8080/user
 Content-Type: application/json
 
@@ -7,15 +8,24 @@ Content-Type: application/json
     "userName": "Mr.Specter"
 }
 
+###
+@token = {{loginInfo.response.headers.Authorization}}
+
 // Lege Lobby an
 ###
 POST http://localhost:8080/lobby
 Content-Type: application/json
+Authorization: {{token}}
 
 {
     "creator": "636ab63d04695ec920d339aa",
     "gamemode": "Dis a gamemode"
 }
+
+//Get Lobby
+###
+GET http://localhost:8080/lobby/636d44139f17922d1086bddc
+Authorization: {{token}}
 
 // Update Lobby
 ###

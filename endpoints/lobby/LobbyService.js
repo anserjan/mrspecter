@@ -1,4 +1,5 @@
 const Lobby = require("./LobbyModel")
+const userService = require("../user/userService")
 
 function getLobbies(callback){
     Lobby.find((err, lobbies) => {
@@ -17,7 +18,7 @@ function getLobbies(callback){
     })
 }
 
-function getLobby(lobbyID, callback){
+function getLobby(userID, lobbyID, callback){
     
         Lobby.findOne({lobbyId: lobbyID}, (err, lobby) => {
             if(err){
@@ -25,22 +26,51 @@ function getLobby(lobbyID, callback){
             }
             else{
                 if(lobby){
-                    return callback(null, lobby)
+                    userService.getUser({_id: userID}, (err, user) => {
+                        if(err){
+                            return callback(err, null)
+                        }
+                        if(user){
+                            //ObjectId('...')
+                            if(!lobby.users.includes(user._id) && lobby.users.length < 13){
+                                lobby.users.push(user)
+                                lobby.save().then(() => {
+                                    return callback(null, lobby)
+                                })
+                            }
+                            if(lobby.users.length >= 12){
+                                return callback(new Error("too many players"), null)
+                            }
+                            else{
+                                return callback(null, lobby)
+                            }
+                        }
+                        else{
+                            return callback(new Error("Something went wrong"), null)
+                        }
+                    })
                 }
-                return callback(new Error("no lobby found", null))
+                else{
+                    return callback(new Error("no lobby found", null))
+                }
             }
         })
 }
 
-function createLobby(lobbyData, callback){
+function createLobby(userID, lobbyData, callback){
         Lobby.create(lobbyData, (err, lobby) => {
             if(err){ 
                 return callback(err, null)
             }
             else{
                 if(lobby){
-                    console.log(lobby)
-                    return callback(null, lobby)
+                    userService.getUser({_id: userID}, (err, user) => {
+                        lobby.users.push(user)
+                        lobby.save().then(() => {
+                            console.log(lobby)
+                            return callback(null, lobby)
+                        })
+                    })
                 }
                 else{
                     return callback(err, null)
