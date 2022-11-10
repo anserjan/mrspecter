@@ -1,5 +1,6 @@
 const Lobby = require("./LobbyModel")
 const userService = require("../user/userService")
+const User = require("../user/userModel")
 
 function getLobbies(callback){
     Lobby.find((err, lobbies) => {
@@ -20,12 +21,13 @@ function getLobbies(callback){
 
 function getLobby(userID, lobbyID, callback){
     
-        Lobby.findOne({lobbyId: lobbyID}, (err, lobby) => {
+        Lobby.findOne({_id: lobbyID}, (err, lobby) => {
             if(err){
                 return callback(err, null)
             }
             else{
                 if(lobby){
+                    console.log(lobby)
                     userService.getUser({_id: userID}, (err, user) => {
                         if(err){
                             return callback(err, null)
@@ -37,9 +39,6 @@ function getLobby(userID, lobbyID, callback){
                                 lobby.save().then(() => {
                                     return callback(null, lobby)
                                 })
-                            }
-                            if(lobby.users.length >= 12){
-                                return callback(new Error("too many players"), null)
                             }
                             else{
                                 return callback(null, lobby)
@@ -64,8 +63,9 @@ function createLobby(userID, lobbyData, callback){
             }
             else{
                 if(lobby){
-                    userService.getUser({_id: userID}, (err, user) => {
+                    User.findById(userID, (err, user) => {
                         lobby.users.push(user)
+                        lobby.creator = user
                         lobby.save().then(() => {
                             console.log(lobby)
                             return callback(null, lobby)
@@ -119,10 +119,44 @@ function deleteLobby(lobbyID, callback){
         })
 }
 
+function leaveLobby(userID, lobbyID, callback){
+    Lobby.findById(lobbyID, (err, lobby) => {
+        if(err){
+            return callback(err, null)
+        }
+        else if(lobby){
+            console.log("CREATOR: " + lobby.creator + "\nUSERID: "+userID)
+            if(lobby.creator == userID){
+                Lobby.deleteOne({_id: lobbyID}, (err, result) => {
+                    if(err){
+                        return callback(err, null)
+                    }
+                    else{
+                        return callback(null, result)
+                    }
+                })
+            }
+            else if(lobby.users.includes(userID)){
+                lobby.users.remove(userID)
+                lobby.save().then(() => {
+                    return callback(null, "Left Lobby")
+                })
+            }
+            else{
+                return callback(new Error("Cannot Leave Lobby/Not A Lobby Member"))
+            }
+        }
+        else{
+            return callback(new Error("No Lobby Found"), null)
+        }
+    })
+}
+
 module.exports = {
     getLobbies,
     getLobby,
     createLobby,
     updateLobby,
     deleteLobby,
+    leaveLobby,
 }

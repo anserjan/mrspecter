@@ -18,14 +18,25 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-    "creator": "636ab63d04695ec920d339aa",
     "gamemode": "Dis a gamemode"
 }
 
+
 //Get Lobby
 ###
-GET http://localhost:8080/lobby/636d44139f17922d1086bddc
+GET http://localhost:8080/lobby/636d7930298144b40a218a03
 Authorization: {{token}}
+
+//LEAVE Lobby
+###
+GET http://localhost:8080/lobby/636d7930298144b40a218a03/leave
+Authorization: {{token}}
+
+//LEAVE Lobby error
+###
+GET http://localhost:8080/lobby/636d78f7298144b40a2189f0/leave
+Authorization: {{token}}
+
 
 // Update Lobby
 ###
