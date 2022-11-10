@@ -15,36 +15,52 @@ function getUser(userID, callback){
 }
 
 function createUser(req, res, callback){
-    req.body["userID"] = createID(req.body.userName)
-    User.create(req.body, function(err, user){
-        if(err || !user){
-            console.log("Fehler beim erstellen " + err)
-            return callback(err, null)
-        }else{
-            createSessionToken(user, function (err, token, user) {
-                if (token) {
-                    res.header("Authorization", "Bearer " + token);
-                    const { id, userName, userID, ...partialobject } = user;
-                    const subset = { userID, userName, auth_token:token};
-                    return callback(null, subset)
-                }
-                else {
-                    console.log("Token has not been created, Error: " + err);
-                    return callback('Username or password wrong' + userID, null)
-                }
-            })
-            
-        }
+    createID(req.body.userName, (err, userID) => {
+        req.body["userID"] = userID
+        console.log("USERID: " + userID)
+        User.create(req.body, function(err, user){
+            if(err || !user){
+                console.log("Fehler beim erstellen " + err)
+                return callback(err, null)
+            }else{
+                createSessionToken(user, function (err, token, user) {
+                    if (token) {
+                        res.header("Authorization", "Bearer " + token);
+                        const { id, userName, userID, ...partialobject } = user;
+                        const subset = { userID, userName, auth_token:token};
+                        return callback(null, subset)
+                    }
+                    else {
+                        console.log("Token has not been created, Error: " + err);
+                        return callback('Username or password wrong' + userID, null)
+                    }
+                })
+                
+            }
+        })
     })
 }
 
-function createID(userName) {
+function createID(userName, callback) {
   userID = "#"
   for(let i = 0; i < 4; i++) {
     userID += Math.floor(Math.random() * 9)
   }
-  if(User.findOne({userID: userName + userID})) createID(userName)
-  return userName + userID
+  User.findOne({userID: userName + userID}, (err, user) => {
+    if(err){
+        callback(err, null)
+    }
+    if(user){
+        console.log(user)
+        createID(userName) //potentielle Endlosschleife
+    }
+    else{
+        console.log("alles gut")
+         callback(null, userName + userID)
+    } 
+  })
+
+  
 }
 
 function updateUser(req, callback) {
