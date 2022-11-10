@@ -1,0 +1,33 @@
+// Lege Test User an
+###
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{
+    "userName": "Mr.Specter"
+}
+
+// Lege Lobby an
+###
+POST http://localhost:8080/lobby
+Content-Type: application/json
+
+{
+    "creator": "636ab63d04695ec920d339aa",
+    "gamemode": "Dis a gamemode"
+}
+
+// Update Lobby
+###
+PUT http://localhost:8080/lobby/636ab6b8607558e98c5f87d0
+Content-Type: application/json
+
+{
+    "creator": "636ab63d04695ec920d339aa",
+    "gamemode": "A gamemode"
+}
+
+// Delete Lobby
+###
+DELETE http://localhost:8080/lobby/636ab6b8607558e98c5f87d0
+Content-Type: application/json
