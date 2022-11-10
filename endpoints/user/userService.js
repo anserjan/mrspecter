@@ -32,7 +32,7 @@ function createUser(req, res, callback){
                     if (token) {
                         res.header("Authorization", "Bearer " + token);
                         const { id, userName, userID, ...partialobject } = user;
-                        const subset = { userID, userName, auth_token:token};
+                        const subset = { id, userID, userName, auth_token:token};
                         return callback(null, subset)
                     }
                     else {
