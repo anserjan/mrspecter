@@ -1,3 +1,4 @@
+const { json } = require("express")
 const { createSessionToken } = require("./AuthenticationService")
 const User = require("./userModel")
 
@@ -16,14 +17,18 @@ function getUser(userID, callback){
 
 function createUser(req, res, callback){
     createID(req.body.userName, (err, userID) => {
-        req.body["userID"] = userID
+        if(err){
+            callback(err, null)
+        }
+        else{
+            req.body["userID"] = userID
         console.log("USERID: " + userID)
-        User.create(req.body, function(err, user){
-            if(err || !user){
-                console.log("Fehler beim erstellen " + err)
-                return callback(err, null)
+        User.create(req.body, function(err2, user){
+            if(err2 || !user){
+                console.log("Fehler beim erstellen " + err2)
+                return callback(err2, null)
             }else{
-                createSessionToken(user, function (err, token, user) {
+                createSessionToken(user, function (err3, token, user) {
                     if (token) {
                         res.header("Authorization", "Bearer " + token);
                         const { id, userName, userID, ...partialobject } = user;
@@ -31,13 +36,14 @@ function createUser(req, res, callback){
                         return callback(null, subset)
                     }
                     else {
-                        console.log("Token has not been created, Error: " + err);
+                        console.log("Token has not been created, Error: " + err3);
                         return callback('Username or password wrong' + userID, null)
                     }
                 })
                 
             }
         })
+        }
     })
 }
 
@@ -51,11 +57,19 @@ function createID(userName, callback) {
         callback(err, null)
     }
     if(user){
-        console.log(user)
-        createID(userName) //potentielle Endlosschleife
+        User.find({userName: userName}, (err2, users) => {
+            if(err2){
+                return callback(err2, null)
+            }
+            if(users.length > 999){
+                return callback(new Error("no more tags with this name available"))
+            }
+            else{
+                createID(userName)
+            }
+        })
     }
     else{
-        console.log("alles gut")
          callback(null, userName + userID)
     } 
   })
