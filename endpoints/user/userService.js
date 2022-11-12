@@ -6,10 +6,8 @@ const User = require("./userModel")
 function getUser(userID, callback){
     User.findOne({'_id': userID}, function(err, user){
         if(!user){
-            console.log("Fehler bei der Suche " + err)
             return callback('UserID existiert nicht: ' + userID, null)
         }else{
-            console.log("Alles super")
             return callback(null, user)
         }
     })
@@ -22,10 +20,8 @@ function createUser(req, res, callback){
         }
         else{
             req.body["userID"] = userID
-        console.log("USERID: " + userID)
         User.create(req.body, function(err2, user){
             if(err2 || !user){
-                console.log("Fehler beim erstellen " + err2)
                 return callback(err2, null)
             }else{
                 createSessionToken(user, function (err3, token, user) {
@@ -81,7 +77,6 @@ function updateUser(req, callback) {
     if(req.params.userID != req.authenticatedUser.id){ return callback("Cannot change data of another user", null) }
     User.findById(req.params.userID, function(err, user) {
         if(!user){
-            console.log('Kein user gefunden mit: '+req.params.userID);
             return callback("Kein user gefunden mit der UserID: " + req.params.userID, null);
 
         }else{
@@ -89,7 +84,6 @@ function updateUser(req, callback) {
                 return callback("UserID cannot be changed", null)
             }
             Object.assign(user, req.body)
-            console.log(req.body)
             user.save(function(err, user) {
                 if(err){
                     console.log("Update User save failed")
@@ -107,10 +101,8 @@ function updateUser(req, callback) {
 function deleteUser(req, callback){
     User.findOneAndDelete({'_id': req.params.userID}, function(err, user){
         if(!user){
-            console.log("Fehler beim löschen " + err)
             return callback("User kann nicht gelöscht werden da UserID nicht existiert: " + req.params.userID, null)
         }else{
-            console.log("Alles super")
             return callback(null, user)
         }
     })
