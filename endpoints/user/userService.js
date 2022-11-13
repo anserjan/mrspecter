@@ -32,7 +32,6 @@ function createUser(req, res, callback){
                         return callback(null, subset)
                     }
                     else {
-                        console.log("Token has not been created, Error: " + err3);
                         return callback('Username or password wrong' + userID, null)
                     }
                 })
@@ -86,7 +85,6 @@ function updateUser(req, callback) {
             Object.assign(user, req.body)
             user.save(function(err, user) {
                 if(err){
-                    console.log("Update User save failed")
                     return callback("Saving the object after updating failed", null)
                 }else{
                     return callback(null, user);
