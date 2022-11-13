@@ -1,5 +1,6 @@
 const Lobby = require("./LobbyModel")
 const userService = require("../user/userService")
+const GamemodeService = require("../gamemode/GamemodeService")
 const User = require("../user/userModel")
 
 function getLobbies(callback){
@@ -9,7 +10,6 @@ function getLobbies(callback){
         }
         else{
             if(lobbies){
-                console.log(lobbies)
                 return callback(null, lobbies)
             }
             else{
@@ -20,14 +20,12 @@ function getLobbies(callback){
 }
 
 function getLobby(userID, lobbyID, callback){
-    
         Lobby.findOne({_id: lobbyID}, (err, lobby) => {
             if(err){
                 return callback(err, null)
             }
             else{
                 if(lobby){
-                    console.log(lobby)
                     userService.getUser({_id: userID}, (err, user) => {
                         if(err){
                             return callback(err, null)
@@ -56,46 +54,32 @@ function getLobby(userID, lobbyID, callback){
         })
 }
 
-function createLobby(userID, lobbyData, callback){
-        Lobby.create(lobbyData, (err, lobby) => {
-            if(err){ 
-                return callback(err, null)
-            }
-            else{
-                if(lobby){
-                    User.findById(userID, (err, user) => {
-                        lobby.users.push(user)
-                        lobby.creator = user
-                        lobby.save().then(() => {
-                            console.log(lobby)
-                            return callback(null, lobby)
-                        })
-                    })
-                }
-                else{
-                    return callback(err, null)
-                }
-            
-            }
+function createLobby(userID, callback){
+  GamemodeService.createGamemode((gamemodeError, gamemode) => {
+    if(gamemodeError) return callback(gamemodeError, null)
+    Lobby.create({creator: userID, gamemode: gamemode}, (lobbyError, lobby) => {
+      if(lobbyError) return callback("Could not create lobby. " + lobbyError, null)
+      if(lobby){
+        lobby.users.push(userID)
+        lobby.save().then(() => {
+          return callback(null, lobby)
         })
+      } else {
+        return callback(lobbyError, null)
+      }  
+    })
+  })
 }
 
 function updateLobby(lobbyID, lobbyData, callback){
         Lobby.findById(lobbyID, (err, lobby) => {
             if(err){
-                console.log(err)
                 return callback(err, null)
             }
             else{
                 if(lobby){
-                    console.log(lobby)
-                    //Hier evtl noch auf "nur "gamemode" spezifizieren
-                    for(data in lobbyData){
-                        lobby[data] = lobbyData[data]
-                    }
-    
+                    lobby.update(lobbyData)
                     lobby.save().then(() => {
-                        console.log(lobby)
                         return callback(null, lobby)
                     })
                 }

@@ -8,10 +8,11 @@ function arrayLimit(val) {
   }
 
 const LobbySchema = new Schema({
-  creator: {type: Schema.ObjectId, ref: 'User'},
-  gamemode: {type: Schema.ObjectId, ref: 'Gamemode'},
-  users: {type: [{ type: Schema.ObjectId, ref: 'User' }], validate: [arrayLimit, 'Max 12 Users']}
-}, {timestamps: true} 
+  creator: { type: Schema.ObjectId, ref: User, required: true },
+  gamemode: { type: Schema.ObjectId, ref: Gamemode, required: true },
+  maximumUsers:{ type: Number },
+  users: { type: [{ type: Schema.ObjectId, ref: User }], validate: [arrayLimit, "Max 12 Users"] }
+  }, { timestamps: true }
 )
 
 module.exports = mongoose.model("Lobby", LobbySchema)

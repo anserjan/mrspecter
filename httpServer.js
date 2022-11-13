@@ -19,7 +19,6 @@ app.use('/lobby', lobbyRoutes)
 
 database.initDb(function(err, db){
   if(db){
-    console.info("Database connected")
     createAdmin()
     startExpressServer()
   }

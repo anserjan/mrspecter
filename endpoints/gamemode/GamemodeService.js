@@ -14,13 +14,13 @@ function getGamemode(gamemodeID, callback) {
   })
 }
 
-function createGamemode(gameRules, callback) {
-  Gamemode.create(gameRules, (error, gamemode) => {
+function createGamemode(callback) {
+  Gamemode.create({}, (error, gamemode) => {
     if(error) return callback(error, null)
     if(gamemode) {
       return callback(null, gamemode)
     } else {
-      return callback(new Error("could not create gamemode", null))
+      return callback(new Error("Could not create gamemode. ", null))
     }
   })
 }
