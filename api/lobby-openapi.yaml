@@ -17,7 +17,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_201'
+                $ref: '#/components/schemas/Lobby'
         "400":
           description: invalid user
         "500":
@@ -112,30 +112,34 @@ components:
     Lobby:
       type: object
       properties:
-        lobbyId:
-          type: integer
-        Gamemode:
-          $ref: '#/components/schemas/Gamemode'
+        _id:
+          type: string
+        gamemode:
+          type: string
         magick_link:
           type: string
         users:
           type: array
           items:
-            $ref: '#/components/schemas/User'
+            type: string
     User:
       type: object
       properties:
-        userId:
-          type: integer
-        name:
+        _id:
           type: string
+        userID:
+          type: string
+        userName:
+          type: string
+        isAdministrator:
+          type: boolean
     Gamemode:
       type: object
       properties:
-        gamemodeId:
-          type: integer
-        huntedUserId:
-          type: integer
+        _id:
+          type: string
+        huntedUser:
+          type: string
         updatedAt:
           type: string
         maximumUsers:
@@ -143,15 +147,6 @@ components:
         gameBorders:
           type: array
           items:
-            type: number
-            format: double
+            type: string
         gametime:
-          type: string
-          format: date-time
-    inline_response_201:
-      type: object
-      properties:
-        lobby_id:
           type: integer
-        magick_link:
-          type: string
