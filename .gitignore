@@ -19,3 +19,5 @@ mongodata
 mongodatatest
 # Submission file
 abgabe.zip
+#package-lock.json
+package-lock.json
