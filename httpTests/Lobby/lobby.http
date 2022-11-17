@@ -5,7 +5,7 @@ POST http://localhost:8080/user
 Content-Type: application/json
 
 {
-    "userName": "Mr.Specter"
+    "name": "Mr.Specter"
 }
 
 ###
@@ -13,6 +13,7 @@ Content-Type: application/json
 
 // Lege Lobby an
 ###
+# @name lobbyInfo
 POST http://localhost:8080/lobby
 Content-Type: application/json
 Authorization: {{token}}
@@ -20,27 +21,28 @@ Authorization: {{token}}
 {
     "gamemode": "Dis a gamemode"
 }
-
+###
+@lobbyId = {{lobbyInfo.response.body._id}}
 
 //Get Lobby
 ###
-GET http://localhost:8080/lobby/636d7930298144b40a218a03
+GET http://localhost:8080/lobby/{{lobbyId}}
 Authorization: {{token}}
 
 //LEAVE Lobby
 ###
-GET http://localhost:8080/lobby/636d7930298144b40a218a03/leave
+GET http://localhost:8080/lobby/{{lobbyId}}/leave
 Authorization: {{token}}
 
 //LEAVE Lobby error
 ###
-GET http://localhost:8080/lobby/636d78f7298144b40a2189f0/leave
+GET http://localhost:8080/lobby/{{lobbyId}}/leave
 Authorization: {{token}}
 
 
 // Update Lobby
 ###
-PUT http://localhost:8080/lobby/636ab6b8607558e98c5f87d0
+PUT http://localhost:8080/lobby/{{lobbyId}}
 Content-Type: application/json
 
 {
@@ -50,5 +52,5 @@ Content-Type: application/json
 
 // Delete Lobby
 ###
-DELETE http://localhost:8080/lobby/636ab6b8607558e98c5f87d0
+DELETE http://localhost:8080/lobby/{{lobbyId}}
 Content-Type: application/json
