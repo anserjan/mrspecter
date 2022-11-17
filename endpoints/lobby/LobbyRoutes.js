@@ -9,11 +9,11 @@ router.get('/', (req, res) => {
 			return res.status(500).set({error: err})
 		}
 		else{
-			return res.json(erg)
+			return res.status(200).json({lobbies:erg})
 		}
 	})
 });
-
+// TODO Error.message Statuscode not working
 router.get('/:lobbyId/leave', isAuthenticated, (req, res) => {
 	LobbyService.leaveLobby(req.authenticatedUser.id, req.params.lobbyId, (err, result) => {
 		if(err){
@@ -88,7 +88,7 @@ router.delete('/:lobbyid', (req, res) => {
 			return res.status(500).json({error: err})
 		}
 		else{
-			return res.sendStatus(204)
+			return res.status(204).json(erg)
 		}
 	})
 })

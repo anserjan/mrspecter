@@ -72,4 +72,4 @@ function validateTime(gamemodeID, callback) {
   })
 }
 
-module.exports = { getGamemode, createGamemode, updateGamemode, deleteGamemode, validateTime }
+module.exports = { getGamemode, createGamemode, updateGamemode }

@@ -49,6 +49,14 @@ test("DuplicateDB start", async () => {
 
 describe("Express Lobby Routes", function () {
 
+  test("Get /lobby/ with empty database", async() => {
+    const res = await request(app)
+      .get("/lobby/")
+      .set("Content-type", "application/json")
+    expect(res.statusCode).toBe(200)
+    expect(res.body.lobbies).toMatchObject([])
+  })
+
   test("CREATE /lobby", async () => {
     const res = await request(app)
       .post("/lobby/")
@@ -63,6 +71,14 @@ describe("Express Lobby Routes", function () {
     lobby = res.body
   })
 
+  test("POST Create lobby without authentication /lobby", async() => {
+    const res = await request(app)
+      .post("/lobby/")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer ")
+    expect(res.statusCode).toBe(401)
+  })
+
   test("GET /lobby/:lobbyid", async() => {
     const res = await request(app)
       .get("/lobby/" + lobby._id)
@@ -70,7 +86,7 @@ describe("Express Lobby Routes", function () {
       .set("Authorization", "Bearer " + testUser.auth_token)
     expect(res.statusCode).toBe(200)
     expect(res.body._id).toBe(lobby._id)
-    expect(res.body.gamemode).toBe(lobby.gamemode)
+    expect(res.body.gamemode._id).toBe(lobby.gamemode)
     expect(res.body.creator).toBe(lobby.creator)
   })
 
@@ -83,12 +99,138 @@ describe("Express Lobby Routes", function () {
   })
   
   test("PUT Update Gamemode /lobby/:lobbyid", async() => {
-    const res = await request(app)
+    var res = await request(app)
+      .post("/lobby/")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+    expect(res.statusCode).toBe(201)
+
+    var lobby = res.body
+
+    res = await request(app)
       .put("/lobby/" + lobby._id)
       .set("Content-type", "application/json")
       .set("Authorization", "Bearer " + testUser.auth_token)
       .send({gamemode: { huntedUser: testUser.id, gametime: "2000" }})
-      // Todo updater fertigstellen
     expect(res.statusCode).toBe(200)
+    expect(res.body).toHaveProperty("gamemode")
+    expect(res.body.gamemode.huntedUser).toBe(testUser.id)
+    expect(res.body.gamemode.gametime).toBe(2000)
+  })
+
+  test("PUT Update Lobby with wrong lobbyID", async() => {
+    var res = await request(app)
+      .post("/lobby/")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+    expect(res.statusCode).toBe(201)
+
+    var lobby = res.body
+
+    res = await request(app)
+      .put("/lobby/" + lobby._id+2)
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+      .send({gameUser: testUser._id})
+    expect(res.statusCode).toBe(500)
+  })
+
+  test("DELETE Lobby", async() => {
+    var res = await request(app)
+      .post("/lobby/")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+    expect(res.statusCode).toBe(201)
+
+    lobby = res.body
+
+    res = await request(app)
+      .delete("/lobby/"+ lobby._id)
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+    expect(res.statusCode).toBe(204)
+    
+    res = await request(app)
+      .get("/lobby/" + lobby._id)
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+    expect(res.statusCode).toBe(404)
+  })
+
+  test("GET Leave lobby", async() => {
+    // Create lobby
+    var res = await request(app)
+      .post("/lobby/")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+    expect(res.statusCode).toBe(201)
+
+    lobby = res.body
+
+    // Create second user
+    res = await request(app)
+      .post("/user/")
+      .set("Content-type", "application/json")
+      .send({userName:"SecondUser"})
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toMatchObject({userName:"SecondUser"})
+    expect(res.header.authorization).toContain("Bearer")
+    secondUser = res.body
+    secondUser.auth_token = res.header.authorization.split(" ")[1]
+
+    // Second user into lobby
+    res = await request(app)
+      .get("/lobby/" + lobby._id)
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + secondUser.auth_token)
+    expect(res.statusCode).toBe(200)
+    expect(res.body._id).toBe(lobby._id)
+    expect(res.body.users).toContain(secondUser.id)
+
+    // second user leave lobby
+    res = await request(app)
+      .get("/lobby/" + lobby._id+ "/leave")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + secondUser.auth_token)
+    expect(res.statusCode).toBe(200)
+
+  })
+
+  test("GET Leave lobby with lobby not existing", async() => {
+    const res = await request(app)
+      .get("/lobby/fhio4238234l230010103f/leave")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+    expect(res.statusCode).toBe(500)
+  })
+
+  test("GET Leave lobby while not being registered in lobby", async() => {
+    // create lobby
+    var res = await request(app)
+      .post("/lobby/")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + testUser.auth_token)
+    expect(res.statusCode).toBe(201)
+
+    lobby = res.body
+
+    // create second user
+    res = await request(app)
+      .post("/user/")
+      .set("Content-type", "application/json")
+      .send({userName:"SecondUser"})
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toMatchObject({userName:"SecondUser"})
+    expect(res.header.authorization).toContain("Bearer")
+    secondUser = res.body
+    secondUser.auth_token = res.header.authorization.split(" ")[1]
+
+    // leave lobby while not being registered
+    res = await request(app)
+      .get("/lobby/" + lobby._id + "/leave")
+      .set("Content-type", "application/json")
+      .set("Authorization", "Bearer " + secondUser.auth_token)
+    expect(res.statusCode).toBe(400)
+
   })
 })
