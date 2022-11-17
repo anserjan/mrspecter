@@ -7,8 +7,10 @@ info:
 servers:
 - url: https://virtserver.swaggerhub.com/cloudy-dev/MrSpecterUsers/1.0.0
   description: SwaggerHub API Auto Mocking
+- url: http://localhost:8080
+  description: Local Testing Server
 paths:
-  /users:
+  /user:
     post:
       summary: Adds a new user
       requestBody:
@@ -25,7 +27,7 @@ paths:
                 $ref: '#/components/schemas/inline_response_200'
         "400":
           description: User couldn't be created
-  /users/{userId}:
+  /user/{userId}:
     get:
       summary: Get a user by ID
       parameters:
@@ -36,8 +38,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          example: 1337
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
       responses:
         "200":
           description: OK
@@ -57,8 +59,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          example: 1337
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
       requestBody:
         content:
           application/json:
@@ -101,7 +103,7 @@ components:
         name:
           type: string
       example:
-        id: 1337
+        id: "637620d6af622b1c8dbf7f7e"
         name: Thomas
     inline_response_200:
       type: object
@@ -113,7 +115,7 @@ components:
         auth_token:
           type: string
       example:
-        id: 1337
+        id: "637620d6af622b1c8dbf7f7e"
         name: Jessica
         auth_token: vuuunrv82nrvu29rvn238r2vnr23v23v
   securitySchemes:
