@@ -116,8 +116,6 @@ components:
           type: string
         gamemode:
           type: string
-        magick_link:
-          type: string
         users:
           type: array
           items:
