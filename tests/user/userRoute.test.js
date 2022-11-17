@@ -22,10 +22,10 @@ beforeEach(async () => {
     const res = await request(app)
         .post('/user/')
         .set('Content-type', 'application/json')
-        .send({userName:"Testier"})
+        .send({name:"Testier"})
     expect(res.statusCode).toBe(200);
-    expect(res.body).toMatchObject({userName:"Testier"});
-    expect(res.body).toHaveProperty('userName', 'id', 'auth_token');
+    expect(res.body).toMatchObject({name:"Testier"});
+    expect(res.body).toHaveProperty('name', 'id', 'auth_token');
     expect(res.header.authorization).toContain("Bearer")
     testUser = res.body
     testUser.auth_token = res.header.authorization.split(" ")[1];
@@ -44,9 +44,9 @@ describe('Express User Routes', function () {
         const res = await request(app)
             .post('/user/')
             .set('Content-type', 'application/json')
-            .send({userName:"Testier"})
+            .send({name:"Testier"})
         expect(res.statusCode).toBe(200);
-        expect(res.body).toMatchObject({userName:"Testier"});
+        expect(res.body).toMatchObject({name:"Testier"});
     });
 
     test('CREATE /user missing body', async () => {
@@ -60,7 +60,7 @@ describe('Express User Routes', function () {
     test('GET /user', async () => {
         const res = await request(app).get('/user/'+testUser.id);
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({userName:testUser.userName});
+        expect(res.body).toEqual({name:testUser.name});
     });
 
     test('GET /user not found', async () => {
@@ -72,14 +72,14 @@ describe('Express User Routes', function () {
     test('Change user name', async () => {
         let res = await request(app).get('/user/'+testUser.id);
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({userName:testUser.userName});
+        expect(res.body).toEqual({name:testUser.name});
         res = await request(app)
             .put('/user/' + testUser.id)
             .set('Authorization', 'Bearer ' + testUser.auth_token)
-            .send({userName:"Neuer Name Juhuu"})
+            .send({name:"Neuer Name Juhuu"})
         expect(res.statusCode).toBe(200);
-        expect(res.body).toMatchObject({userName:"Neuer Name Juhuu"});
-        console.log(res.text)
+        expect(res.body).toMatchObject({name:"Neuer Name Juhuu"});
+        // console.log(res.text)
     });
 
     test('Change user name not found', async () => {
@@ -91,28 +91,28 @@ describe('Express User Routes', function () {
         let res = await request(app)
             .post('/user/')
             .set('Content-type', 'application/json')
-            .send({userName:"User1336"})
+            .send({name:"User1336"})
         expect(res.statusCode).toBe(200);
-        expect(res.body).toHaveProperty('userName', 'id', 'auth_token');
+        expect(res.body).toHaveProperty('name', 'id', 'auth_token');
         expect(res.header.authorization).toContain("Bearer")
         newUser = res.body
         newUser.auth_token = res.header.authorization.split(" ")[1];
         res = await request(app).get('/user/'+testUser.id);
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({userName:testUser.userName});
+        expect(res.body).toEqual({name:testUser.name});
         res = await request(app)
             .put('/user/' + testUser.id)
             .set('Authorization', 'Bearer ' + newUser.auth_token)
-            .send({userName:"Bobby123"})
+            .send({name:"Bobby123"})
         expect(res.statusCode).toBe(400);
         expect(res.text).toContain("Cannot change data of another user")
-        console.log(res.text)
+        // console.log(res.text)
     });
   
     test('Delete user', async () => {
         let res = await request(app).get('/user/'+testUser.id);
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({userName:testUser.userName});
+        expect(res.body).toEqual({name:testUser.name});
         res = await request(app)
             .delete('/user/' + testUser.id)
             .set('Authorization', 'Bearer ' + testUser.auth_token)
@@ -120,7 +120,7 @@ describe('Express User Routes', function () {
         res = await request(app).get('/user/'+testUser.id);
         expect(res.statusCode).toBe(404);
         expect(res.text).toContain("UserID existiert nicht")
-        console.log(res.text)
+        // console.log(res.text)
     });
 
     test('Authenticate after delete', async () => {
@@ -134,11 +134,11 @@ describe('Express User Routes', function () {
         expect(res.text).toContain("User doesn't exist anymore")
     });
 
-    test('Illegal userName type post', async () => {
+    test('Illegal name type post', async () => {
         const res = await request(app)
             .post('/user/')
             .set('Content-type', 'application/json')
-            .send({userName:{null:null}})
+            .send({name:{null:null}})
         expect(res.statusCode).toBe(400);
     });
 

@@ -29,9 +29,9 @@ beforeEach(async () => {
   const res = await request(app)
     .post("/user/")
     .set("Content-type", "application/json")
-    .send({userName:"LobbyUser"})
+    .send({name:"LobbyUser"})
   expect(res.statusCode).toBe(200)
-  expect(res.body).toMatchObject({userName:"LobbyUser"})
+  expect(res.body).toMatchObject({name:"LobbyUser"})
   expect(res.header.authorization).toContain("Bearer")
   testUser = res.body
   testUser.auth_token = res.header.authorization.split(" ")[1]
@@ -41,10 +41,6 @@ beforeEach(async () => {
 afterAll(async () => {
   DB.clear()
   DB.close()
-})
-
-test("DuplicateDB start", async () => {
-  await expect(DB.connect()).rejects.toThrow(Error)
 })
 
 describe("Express Lobby Routes", function () {
@@ -171,9 +167,9 @@ describe("Express Lobby Routes", function () {
     res = await request(app)
       .post("/user/")
       .set("Content-type", "application/json")
-      .send({userName:"SecondUser"})
+      .send({name:"SecondUser"})
     expect(res.statusCode).toBe(200)
-    expect(res.body).toMatchObject({userName:"SecondUser"})
+    expect(res.body).toMatchObject({name:"SecondUser"})
     expect(res.header.authorization).toContain("Bearer")
     secondUser = res.body
     secondUser.auth_token = res.header.authorization.split(" ")[1]
@@ -218,9 +214,9 @@ describe("Express Lobby Routes", function () {
     res = await request(app)
       .post("/user/")
       .set("Content-type", "application/json")
-      .send({userName:"SecondUser"})
+      .send({name:"SecondUser"})
     expect(res.statusCode).toBe(200)
-    expect(res.body).toMatchObject({userName:"SecondUser"})
+    expect(res.body).toMatchObject({name:"SecondUser"})
     expect(res.header.authorization).toContain("Bearer")
     secondUser = res.body
     secondUser.auth_token = res.header.authorization.split(" ")[1]
@@ -233,4 +229,5 @@ describe("Express Lobby Routes", function () {
     expect(res.statusCode).toBe(400)
 
   })
+
 })

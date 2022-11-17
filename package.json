@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Mr Specter App",
-  "main": "index.js",
+  "main": "httpServer.js",
   "scripts": {
     "start": "node ./httpServer.js",
     "test": "jest"

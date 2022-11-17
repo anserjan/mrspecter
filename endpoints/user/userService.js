@@ -27,8 +27,8 @@ function createUser(req, res, callback){
                 createSessionToken(user, function (err3, token, user) {
                     if (token) {
                         res.header("Authorization", "Bearer " + token);
-                        const { id, userName, userID, ...partialobject } = user;
-                        const subset = { id, userID, userName, auth_token:token};
+                        const { id, name, /*userID,*/ ...partialobject } = user;
+                        const subset = { id, /*userID,*/ name, auth_token:token};
                         return callback(null, subset)
                     }
                     else {
@@ -38,39 +38,37 @@ function createUser(req, res, callback){
                 
             }
         })
-        }
-    })
+         }
+     })
 }
 
-function createID(userName, callback) {
-  userID = "#"
-  for(let i = 0; i < 4; i++) {
-    userID += Math.floor(Math.random() * 9)
-  }
-  User.findOne({userID: userName + userID}, (err, user) => {
-    if(err){
-        callback(err, null)
-    }
-    if(user){
-        User.find({userName: userName}, (err2, users) => {
-            if(err2){
-                return callback(err2, null)
-            }
-            if(users.length > 999){
-                return callback(new Error("no more tags with this name available"))
-            }
-            else{
-                createID(userName)
-            }
-        })
-    }
-    else{
-         callback(null, userName + userID)
-    } 
-  })
-
-  
-}
+ function createID(userName, callback) {
+   userID = "#"
+   for(let i = 0; i < 4; i++) {
+     userID += Math.floor(Math.random() * 9)
+   }
+   User.findOne({userID: userName + userID}, (err, user) => {
+     if(err){
+         callback(err, null)
+     }
+     if(user){
+         User.find({userName: userName}, (err2, users) => {
+             if(err2){
+                 return callback(err2, null)
+             }
+             if(users.length > 999){
+                 return callback(new Error("no more tags with this name available"))
+             }
+             else{
+                 createID(userName)
+             }
+         })
+     }
+     else{
+          callback(null, userName + userID)
+     } 
+   })
+ }
 
 function updateUser(req, callback) {
     if(req.params.userID != req.authenticatedUser.id){ return callback("Cannot change data of another user", null) }

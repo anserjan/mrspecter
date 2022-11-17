@@ -12,7 +12,7 @@ function createSessionToken(user, callback) {
 }
 
 function isAuthenticated(req, res, next){
-    console.log("Validieren des Authorization Key:");
+    // console.log("Validieren des Authorization Key:");
     if (typeof req.headers.authorization!="undefined"){
         // console.log("Headers:" + Object.values(req.headers));
         // console.log("Authorization:" + req.headers.authorization.split(" "));
