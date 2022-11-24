@@ -39,8 +39,8 @@ beforeEach(async () => {
 
 // afterEach(async () => DB.clear())
 afterAll(async () => {
-  DB.clear()
-  DB.close()
+  await DB.clear()
+  await DB.close()
 })
 
 describe("Express Lobby Routes", function () {

@@ -5,7 +5,7 @@
   "main": "httpServer.js",
   "scripts": {
     "start": "node ./httpServer.js",
-    "test": "jest"
+    "test": "NODE_ENV= jest"
   },
   "repository": {
     "type": "git",
