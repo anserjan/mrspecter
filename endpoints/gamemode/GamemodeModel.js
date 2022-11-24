@@ -8,7 +8,7 @@ const GamemodeModel = new Schema({
   // lobby: { type: Schema.ObjectId, ref: "Lobby" },
   huntedUser: { type: Schema.ObjectId, ref: User },
   gameBorders: { type: [{ lat: { type: String }, lng: { type: String } }] },
-  gametime: Number,
+  gametime: { type: Number },
 }, { timestamp: true })
 
 module.exports = mongoose.model("Gamemode", GamemodeModel)

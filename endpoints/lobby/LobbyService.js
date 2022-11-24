@@ -62,7 +62,21 @@ function createLobby(userID, callback){
       if(lobby){
         lobby.users.push(userID)
         lobby.save().then(() => {
-          return callback(null, lobby)
+          GamemodeService.getGamemode(lobby.gamemode, (error, gamemode) => {
+            if(error) return callback(error, null)
+            if(gamemode) {
+              return callback(
+                null,
+                {
+                  _id: lobby._id,
+                  creator: lobby.creator,
+                  gamemode: gamemode,
+                  maximumUsers: lobby.maximumUsers,
+                  users: lobby.users
+                }
+              )
+            }
+          })  
         })
       } else {
         return callback(lobbyError, null)

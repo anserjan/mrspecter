@@ -62,6 +62,7 @@ describe("Express Lobby Routes", function () {
     expect(res.body).toHaveProperty("_id")
     expect(res.body).toHaveProperty("creator")
     expect(res.body).toHaveProperty("gamemode")
+    expect(res.body.gamemode).toHaveProperty("_id")
     expect(res.body).toHaveProperty("users")
     expect(res.body.users).toContain(testUser.id)
     lobby = res.body
@@ -82,7 +83,7 @@ describe("Express Lobby Routes", function () {
       .set("Authorization", "Bearer " + testUser.auth_token)
     expect(res.statusCode).toBe(200)
     expect(res.body._id).toBe(lobby._id)
-    expect(res.body.gamemode._id).toBe(lobby.gamemode)
+    expect(res.body.gamemode._id).toBe(lobby.gamemode._id)
     expect(res.body.creator).toBe(lobby.creator)
   })
 
