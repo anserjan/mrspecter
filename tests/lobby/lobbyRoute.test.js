@@ -109,6 +109,9 @@ describe("Express Lobby Routes", function () {
       .set("Content-type", "application/json")
       .set("Authorization", "Bearer " + testUser.auth_token)
       .send({gamemode: { huntedUser: testUser.id, gametime: "2000" }})
+
+      console.log(testUser.id)
+      console.log(res.body)
     expect(res.statusCode).toBe(200)
     expect(res.body).toHaveProperty("gamemode")
     expect(res.body.gamemode.huntedUser).toBe(testUser.id)
@@ -128,7 +131,7 @@ describe("Express Lobby Routes", function () {
       .put("/lobby/" + lobby._id+2)
       .set("Content-type", "application/json")
       .set("Authorization", "Bearer " + testUser.auth_token)
-      .send({gameUser: testUser._id})
+      .send({creator: testUser._id})
     expect(res.statusCode).toBe(500)
   })
 

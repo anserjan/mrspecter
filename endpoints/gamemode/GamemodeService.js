@@ -29,11 +29,16 @@ function updateGamemode(gamemodeID, gamemodeData, callback) {
   Gamemode.findById(gamemodeID, (error, gamemode) => {
     if(error) return callback(error, null)
     if(gamemode) {
-      for(data in gamemodeData) {
-        gamemode[data] = gamemodeData[data]
-      }
+      if(gamemodeData.huntedUser) gamemode.huntedUser = gamemodeData.huntedUser
+      if(gamemodeData.gameBorders) gamemode.gameBorders = gamemodeData.gameBorders
+      if(gamemodeData.gametime) gamemode.gametime = gamemodeData.gametime
       gamemode.save().then(() => {
-        return callback(null, gamemode)
+        return callback(null, {
+          _id: gamemode._id,
+          huntedUser: gamemode.huntedUser,
+          gameBorders: gamemode.gameBorders,
+          gametime: gamemode.gametime
+        })
       })
     } else {
       return callback(new Error("Could not find gamemode", null))
