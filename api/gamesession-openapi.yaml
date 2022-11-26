@@ -12,18 +12,18 @@ servers:
 paths:
   /gamesession:
   get:
-      summary: gets all gamesessions
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-        "401":
-          description: Unauthorized
+    summary: gets all gamesessions
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+      "401":
+        description: Unauthorized
   post:
-    summary: Adds a new gamesession
+    summary: create a new gamesession
     requestBody:
       content:
         application/json:
@@ -40,8 +40,7 @@ paths:
         description: gamesession couldn't be created
   /gamesession/{gamesessionId}:
     get:
-      summary: Get a gamesession by ID, together with position data,
-               also update positiondata
+      summary: Get a gamesession by ID, together with position data, also update positiondata
       parameters:
       - name: gamesessionId
         in: path
@@ -123,7 +122,6 @@ components:
           type: '#/components/schemas/Gamemode'
       example:
         lobbyId: 637620d6af622b1c8dbf7f7e
-        gamemode: 'GameModeOject'
 
     game_ended_response200:
       type: //TODO
