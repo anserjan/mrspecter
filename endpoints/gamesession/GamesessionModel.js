@@ -7,7 +7,7 @@ const Schema = mongoose.Schema
 const GamesessionModel = new Schema({
   gamemode: { type: Schema.ObjectId, ref: Gamemode, required: true },
   users: { type: [{ type: Schema.ObjectId, ref: User }] },
-  userPositions: { type: Schema.ObjectId, ref: UserPosition, required: true },
+  userPositions: { type: Schema.ObjectId, ref: UserPosition },
   gameFinished: { type: boolean }
 })
 

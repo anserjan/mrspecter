@@ -1,23 +1,30 @@
-const express = require("express");
-const router = express.Router();
+const express = require("express")
+const router = express.Router()
 const GamesessionService = require("./Gamesessionservice")
+const { isAuthenticated } = require("./AuthenticationService")
 
 router.get('/', (req, res) => {
-	res.json("TODO")
-});
+	GamesessionService.getGamesessions((error, gamesessions) => {
+    if(error) return res.status(500).set({error: error})
+    return res.status(200).set({gamesessions: gamesessions})
+  })
+})
 
-router.post('/', (req, res) => {
-	res.json("TODO")
-});
+router.post('/', isAuthenticated, (req, res) => {
+	GamesessionService.create(req.body, (error, gamesession) => {
+    if(error) return res.status(500).set({error: error})
+    return res.status(201).json(gamesession)
+  })
+})
 
 router.get('/:gamesessionId', (req, res) => {
 	res.json("TODO")
-});
+})
 
 router.delete('/:gamesessionId', (req, res) => {
 	res.json("TODO")
-});
+})
 
 router.delete('/gamefinished/:gamesessionId', (req, res) => {
 	res.json("TODO")
-});
+})
