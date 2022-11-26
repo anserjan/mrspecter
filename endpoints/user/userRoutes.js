@@ -7,6 +7,7 @@ const {isAuthenticated} = require("./AuthenticationService")
 
 router.get('/:userID', (req, res, next) => {
 	userService.getUser(req.params.userID, function(err, result){
+        // console.log("Result: " + result)
         if(result){
             const {name, ...partialobject } = result;
             const subset = {name};
@@ -23,6 +24,7 @@ router.post('/', (req, res, next) => {
     } 
     else{
         userService.createUser(req, res, function(err, result){
+            // console.log("Result: " + result)
             if(result){
                 res.status(200).json(result)
             }else{
@@ -34,6 +36,7 @@ router.post('/', (req, res, next) => {
 
 router.put('/:userID', isAuthenticated,(req, res, next) => {
     userService.updateUser(req, function(err, result){
+        // console.log("Result: " + result)
         if(result){
             const {id, name, ...partialobject } = result;
             const subset = {id, name};
@@ -46,6 +49,7 @@ router.put('/:userID', isAuthenticated,(req, res, next) => {
 
 router.delete('/:userID', isAuthenticated, (req, res, next) => {
     userService.deleteUser(req, function(err, result){
+        // console.log("Result: " + result)
         if(result){
             res.status(200).json()
         }else{

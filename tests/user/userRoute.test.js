@@ -8,6 +8,7 @@ const {DB} = require("../DB")
 const userRoutes = require("../../endpoints/user/userRoutes")
 const {createUser}  = require("../../endpoints/user/userService");
 const User  = require("../../endpoints/user/userModel");
+const { isAuthenticated } = require("../../endpoints/user/AuthenticationService");
 
 
 const app = new express();
@@ -140,6 +141,19 @@ describe('Express User Routes', function () {
             .set('Content-type', 'application/json')
             .send({name:{null:null}})
         expect(res.statusCode).toBe(400);
+    });
+
+    test('IsAuthenticated', done => {
+        expect.assertions(6) //beforeEach has 4
+        req = {headers : {authorization: "Bearer " + testUser.auth_token}}
+        res = {}
+        isAuthenticated(req, res, () => {
+            // console.log(req)
+            expect(req.authenticatedUser.id).toBe(testUser.id)
+            expect(req.authenticatedUser.name).toBe(testUser.name)
+            
+            done()
+        })
     });
 
 });
