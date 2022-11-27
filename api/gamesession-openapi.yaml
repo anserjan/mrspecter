@@ -40,7 +40,7 @@ paths:
         description: gamesession couldn't be created
   /gamesession/{gamesessionId}:
     get:
-      summary: Get a gamesession by ID, together with position data //cannot update positiondata in GET
+      summary: Get a gamesession by ID, together with position data and updt positions
       parameters:
       - name: gamesessionId
         in: path
