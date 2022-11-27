@@ -6,7 +6,7 @@ const User = require('./userModel');
 function createSessionToken(user, callback) {
     // console.log("AuthenticationService: create Token");
     var privatekey = config.get('session.tokenKey');
-    let token = jwt.sign({ "_id": user._id, "userName": user.userName}, privatekey, { algorithm: 'HS256' });
+    let token = jwt.sign({ "_id": user._id, "name": user.name}, privatekey, { algorithm: 'HS256' });
     // console.log("Token create: " + token);
     callback(null, token, user);
 }
@@ -30,7 +30,7 @@ function isAuthenticated(req, res, next){
             // }
             User.findById(user._id, (err, result) => {
                 if(!result){ return res.status(401).json({error: "User doesn't exist anymore"}) }
-                req.authenticatedUser = {id:user._id, name: user.userName}
+                req.authenticatedUser = {id:user._id, name: user.name}
                 return next();
             })
             
