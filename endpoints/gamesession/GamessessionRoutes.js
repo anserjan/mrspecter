@@ -22,8 +22,11 @@ router.post('/', isAuthenticated, (req, res) => {
   })
 })
 
-router.get('/:gamesessionId', isAuthenticated, (req, res) => {
-	GamesessionService.getGamesession(req.params.gamesessionId, (error, gamesession) => {
+router.get('/:gamesessionId', isAuthenticated, (req, res) => { //checked
+	
+	position = req.body;
+	
+	GamesessionService.getGamesession(req.params.gamesessionId, req.authenticatedUser.id, position, (error, gamesession) => {
 		if(error){
 			if(error.message == "404"){
 				return res.sendStatus(404);

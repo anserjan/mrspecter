@@ -13,13 +13,44 @@ function getGamesessions(callback){  //check
     })
 }
 
-function getGamesession(gamesessionId, callback){  //check
+function getGamesession(gamesessionId, userID, position, callback){  //check
     Gamesession.findById(gamesessionId, (err, gamesession) => {
         if(err){
+            console.log("error")
             return callback(err, null);
         }
         if(gamesession){
-            return callback(null, gamesession);
+            console.log("foundsession")
+            if(position){
+                console.log(position)
+                PositionData.findOne({"userId": userID}, (err, pos) => {
+                    if(err){
+                        return callback(err, null)
+                    }
+                    if(pos){
+                        console.log("POS SCHON DA")
+                        pos.position.push({"lat": position.lat, "lng": position.lng})
+                        pos.save().then(
+                            () => {
+                                return callback(null, gamesession)
+                            }
+                        )
+                    }
+
+                    else{
+                        console.log("NEUE POS")
+                        PositionData.create({"userId": userID, "position": position}, (err, posi) => {
+                            gamesession.userPositions.push(posi)
+                            gamesession.save().then(() => {return callback(null, gamesession)})
+                        })
+                    }
+                })
+            }
+            else{
+                console.log("else")
+                return callback(null, gamesession);
+            }
+            
         }
         else{
             return callback(new Error("Couldn't find gamesession"));
