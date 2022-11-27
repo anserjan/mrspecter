@@ -2,7 +2,7 @@ const Gamesession = require("./GamesessionModel")
 const Users = require("../user/userModel");
 const PositionData = require("../userPosition/UserPositionModel")
 
-function getGamesessions(callback){  //check
+function getGamesessions(callback){  
     Gamesession.find((err, gamesessions) => {
         if(err){
             return callback(err, null);
@@ -13,22 +13,18 @@ function getGamesessions(callback){  //check
     })
 }
 
-function getGamesession(gamesessionId, userID, position, callback){  //check
+function getGamesession(gamesessionId, userID, position, callback){  
     Gamesession.findById(gamesessionId, (err, gamesession) => {
         if(err){
-            console.log("error")
             return callback(err, null);
         }
         if(gamesession){
-            console.log("foundsession")
             if(position){
-                console.log(position)
                 PositionData.findOne({"userId": userID}, (err, pos) => {
                     if(err){
                         return callback(err, null)
                     }
                     if(pos){
-                        console.log("POS SCHON DA")
                         pos.position.push({"lat": position.lat, "lng": position.lng})
                         pos.save().then(
                             () => {
@@ -38,7 +34,6 @@ function getGamesession(gamesessionId, userID, position, callback){  //check
                     }
 
                     else{
-                        console.log("NEUE POS")
                         PositionData.create({"userId": userID, "position": position}, (err, posi) => {
                             gamesession.userPositions.push(posi)
                             gamesession.save().then(() => {return callback(null, gamesession)})
@@ -47,7 +42,6 @@ function getGamesession(gamesessionId, userID, position, callback){  //check
                 })
             }
             else{
-                console.log("else")
                 return callback(null, gamesession);
             }
             
@@ -58,7 +52,7 @@ function getGamesession(gamesessionId, userID, position, callback){  //check
     })
 }
 
-function create(gamesessionContent, callback){  //check
+function create(gamesessionContent, callback){  
     Gamesession.create(gamesessionContent, (err, gamesession) => {
         if(err){
             console.log("undefined error")
@@ -75,14 +69,12 @@ function create(gamesessionContent, callback){  //check
     })
 }
 
-function deleteGamesession(gamesessionId, callback){  //check
+function deleteGamesession(gamesessionId, callback){  
     Gamesession.deleteOne({'_id': gamesessionId}, (err, res) => {
         if(err){
-            console.log(err)
             return callback(err, null);
         }
         else if (res.deletedCount == 1){
-            console.log(res)
             return callback(null, null);
         }
         else{
@@ -97,21 +89,11 @@ function removeUserFromSession(userId, gamesessionId, callback){
             return callback(err, null);
         }
         if(gamesession){
-            Users.findById(userId, (uerr, user) => {
-                if(uerr){
-                    return err;
-                }
-                if(user){
-                    index = gamesession.users.indexOf(user);
-                    gamesession.users.splice(index);
-                    gamesession.save().then(() => {
-                        console.log(gamesession); //kann nach debuggen raus
-                        return callback(null, null);
-                    })
-                }
-                else{
-                    return callback(new Error("no user found"));
-                }
+            
+            index = gamesession.users.indexOf(userId);
+            gamesession.users.splice(index);
+            gamesession.save().then(() => {
+                return callback(null, null);
             })
             
         }
@@ -121,7 +103,7 @@ function removeUserFromSession(userId, gamesessionId, callback){
     })
 }
 
-function endGame(gamesessionId, reason, callback){  //check
+function endGame(gamesessionId, reason, callback){  
     Gamesession.findById(gamesessionId, (err, gamesession) => {
         if(err){
             return callback(err, null);
@@ -134,7 +116,6 @@ function endGame(gamesessionId, reason, callback){  //check
             })
         }
         else{
-            console.log("huh")
             return callback(new Error("404"));
         }
     })

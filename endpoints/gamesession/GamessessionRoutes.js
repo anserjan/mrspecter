@@ -5,14 +5,12 @@ const { isAuthenticated } = require("./AuthenticationService")
 
 
 router.post('/', isAuthenticated, (req, res) => {
-	console.log(req.body)
-	console.log("hi")
+	
 	GamesessionService.create(req.body, (error, gamesession) => {
     if(error){
 		return res.status(500).json({error: error})
 	}
 	if(gamesession){
-		console.log(gamesession)
 		return res.status(201).json(gamesession)
 	}
 	else{
@@ -22,7 +20,7 @@ router.post('/', isAuthenticated, (req, res) => {
   })
 })
 
-router.get('/:gamesessionId', isAuthenticated, (req, res) => { //checked
+router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 	
 	position = req.body;
 	
@@ -47,12 +45,12 @@ router.delete('/:gamesessionId', isAuthenticated, (req, res) => {
 	GamesessionService.deleteGamesession(req.params.gamesessionId, (err, result) => {
 		if(err){
 			if(err.message == "404"){
-				return res.sendStatus(404) //hier wird auch 404 gesendet. Wenn die Tests 500 werfen ist im Test was falsch!
+				return res.sendStatus(404) //hier wird bei tests 404 gesendet
 			}
 			return res.status(500).json({error: err});
 		}
 		else{
-			return res.sendStatus(204); //bitte so bei allen deleterouten 204, NICHT 200 zurzueckgeben
+			return res.sendStatus(204);
 		}
 	})
 })
@@ -71,7 +69,6 @@ router.put('/gamefinished/:gamesessionId', isAuthenticated, (req, res) => {
 			return res.status(200).json({gamesession: gamesession});
 		}
 		else{
-			console.log("idk")
 			return res.sendStatus(404);
 		}
 	})
@@ -79,24 +76,12 @@ router.put('/gamefinished/:gamesessionId', isAuthenticated, (req, res) => {
 
 router.get('/:gamesessionId/leave', isAuthenticated, (req, res) => {
 	userID=req.authenticatedUser.id;
-	GamesessionService.removeUserFromSession(userID, req.params.gamesessionId, (err, res) => {
+	GamesessionService.removeUserFromSession(userID, req.params.gamesessionId, (err, result) => {
 		if(err){
-			return res.status(500).json({error: error});
+			return res.status(500).json({error: err});
 		}
 		else{
-			return res.sendStaus(200);
-		}
-	})
-})
-
-router.put('/gamesession/positions', isAuthenticated, (req, res) => {
-	userID=req.authenticatedUser.id;
-	GamesessionService.updatePositionData(userID, req.body, (err, res) => {
-		if(err){
-			return res.status(500).json({error: error});
-		}
-		else{
-			return res.sendStaus(200);
+			return res.sendStatus(200);
 		}
 	})
 })
