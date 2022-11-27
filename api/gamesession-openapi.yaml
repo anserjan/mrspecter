@@ -40,8 +40,7 @@ paths:
         description: gamesession couldn't be created
   /gamesession/{gamesessionId}:
     get:
-      summary: Get a gamesession by ID, together with position data,
-               also update positiondata
+      summary: Get a gamesession by ID, together with position data //cannot update positiondata in GET
       parameters:
       - name: gamesessionId
         in: path
@@ -63,7 +62,7 @@ paths:
           description: Gamessession doesn't exist
     delete:
       summary: deletes gamesession by id
-      parameters
+      parameters:
       - name: gamesessionId
         in: path
         description: Numeric ID of the gamesession to get
@@ -79,9 +78,9 @@ paths:
         "404":
           description: Gamessession doesn't exist
   /gamesession/gamefinished/{gamesessionId}:
-    get:
+    put:
       summary: ends the gamesession and names reason for game-end
-      parameters
+      parameters:
       - name: gamesessionId
         in: path
         description: Numeric ID of the gamesession to get
@@ -92,7 +91,7 @@ paths:
           type: string
           example: "637620d6af622b1c8dbf7f7e"
       - name: gameEndReason
-        in: path
+        in: body
         description: string containing reason
         required: true
         style: simple
@@ -109,16 +108,46 @@ paths:
                 $ref: '#/components/schemas/game_ended_response200'
         "404":
           description: Gamessession doesn't exist
-    /gamesession/{gamesessionId}/leave/
-
-
+    /gamesession/{gamesessionId}/leave:
+      get:
+        summary: player leaves gamesession
+        parameters:
+        - name: gamesessionId
+          in: path
+          desrciption: gamesessionId
+          required: true
+          style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+        responses:
+        "200":
+          description: OK
+        "404":
+          description: Gamessession doesn't exist/User not in session
+    /gamesession/positions:
+      put:
+        summary: update players current position
+        requestBody:
+      content:
+        application/json:
+           parameters:
+          schema:
+            type: array
+            items:
+              - name: lat
+                type: string
+              - name: lng
+                type: string
+              
 components:
   schemas:
     gamesession_body:
       type: object
       properties:
-        lobbyId:
-          type: string
+        users:
+          type: array
         gamemode:
           type: '#/components/schemas/Gamemode'
       example:

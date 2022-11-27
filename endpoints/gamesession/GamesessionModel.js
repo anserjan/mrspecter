@@ -8,7 +8,8 @@ const GamesessionModel = new Schema({
   gamemode: { type: Schema.ObjectId, ref: Gamemode, required: true },
   users: { type: [{ type: Schema.ObjectId, ref: User }] },
   userPositions: { type: Schema.ObjectId, ref: UserPosition },
-  gameFinished: { type: boolean }
+  gameFinished: { type: Boolean },
+  reason: { type: String },
 })
 
 module.exports = mongoose.model("Gamesession", GamesessionModel)
