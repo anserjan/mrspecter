@@ -18,6 +18,6 @@ router.delete('/:gamesessionId', (req, res) => {
 	res.json("TODO")
 });
 
-router.delete('/gamefinished/:gamesessionId', (req, res) => {
+router.get('/gamefinished/:gamesessionId', (req, res) => {
 	res.json("TODO")
 });
