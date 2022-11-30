@@ -42,8 +42,7 @@ function createAdmin() {
     } else {
       User.create(
         {
-          "userID": "admin",
-          "userName": "admin",
+          "name": "admin",
           "password": "123",
           "isAdministrator": true
         }, (error) => {
