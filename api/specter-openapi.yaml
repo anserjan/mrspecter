@@ -2,12 +2,9 @@ openapi: 3.0.0
 info:
   title: MrSpecter API
   description: API
-  version: 1.0.0
-  license:
-    name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 2.0.0
 servers:
-- url: https://virtserver.swaggerhub.com/cloudy-dev/MrSpecterUsers/1.0.0
+- url: https://app.swaggerhub.com/apis/anserjan/Gamesession/2.0.0
   description: SwaggerHub API Auto Mocking
 - url: http://localhost:8080
   description: Local Testing Server
@@ -174,8 +171,6 @@ paths:
       requestBody:
         description: One or more attributes of the gamesession to update
         required: true
-        style: simple
-        explode: false
         content:
           application/json:
             schema:
@@ -234,11 +229,21 @@ paths:
           type: string
           example: "637620d6af622b1c8dbf7f7e"
       responses:
-        "200"
+        "200":
           description: "todo"
   /gamesession/{gamesessionId}/positions:
     post:
       summary: Send current position, get all positions
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
       responses:
         "200":
           description: Ok
@@ -257,15 +262,38 @@ paths:
                         type: string
                       lng:
                         type: string
-
   /gamesession/{gamesessionId}/leave:
     get:
       summary: Remove self from gamesession
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
       responses:
+        "200":
+          description: "todo"
   /gamesession/{gamesessionId}/ruleViolation:
     post:
       summary: Send own rule violation the notify all users in their next pull
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
       responses:
+        "200":
+          description: "todo"
 components:
   schemas:
     users_userId_body:
