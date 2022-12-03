@@ -102,7 +102,7 @@ paths:
                     description: Gametime in Seconds
                     example: 300
         "400":
-          description: Gamesession cant be created
+          description: Gamesession can not be created
   /gamesession/{gamesessionId}:
     get:
       summary: Get all nessesary gamesession data but not the positions
@@ -210,12 +210,8 @@ paths:
                   maximalUsers:
                     type: integer
                     description: maximum amount of users
-                  gamestate:
-                    type: string
-                    description: current state of the gamesession
-                    example: "LOBBY"
         "404":
-          description: "Gamesession doesn´t exist"
+          description: Gamesession does not exist
     delete:
       summary: Destroy gamesessions all attended users and all positions
       parameters:
@@ -230,7 +226,7 @@ paths:
           example: "637620d6af622b1c8dbf7f7e"
       responses:
         "200":
-          description: "todo"
+          description: Ok
   /gamesession/{gamesessionId}/positions:
     post:
       summary: Send current position, get all positions
@@ -262,6 +258,40 @@ paths:
                         type: string
                       lng:
                         type: string
+        "400":
+          description: "Gamesession does not exist"
+  /gamesession/{gamesessionId}/start:
+    get:
+      summary: Remove self from gamesession
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: Gamesession will beginn, gamestate will update
+  /gamesession/{gamesessionId}/finish:
+    get:
+      summary: Remove self from gamesession
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: Gamesession will stop, gamestate will update
   /gamesession/{gamesessionId}/leave:
     get:
       summary: Remove self from gamesession
@@ -277,7 +307,7 @@ paths:
           example: "637620d6af622b1c8dbf7f7e"
       responses:
         "200":
-          description: "todo"
+          description: Remove user from userlist
   /gamesession/{gamesessionId}/ruleViolation:
     post:
       summary: Send own rule violation the notify all users in their next pull
