@@ -1,6 +1,7 @@
 const Gamesession = require("./GamesessionModel")
-const Users = require("../user/userModel");
+const Attendees = require("../attendee/AttendeeService")
 const PositionData = require("../userPosition/UserPositionModel")
+const Attendee = require("../attendee/AttendeeModel")
 
 function getGamesessions(callback){  
     Gamesession.find((err, gamesessions) => {
@@ -13,57 +14,68 @@ function getGamesessions(callback){
     })
 }
 
-function getGamesession(gamesessionId, userID, position, callback){  
-    Gamesession.findById(gamesessionId, (err, gamesession) => {
+function joinGamesession(userId, gamesessionId){
+    Attendees.createAttendee(userId, gamesessionId);
+}
+
+function getGamesession(gamesessionId, callback){  
+    Attendee.find({gamesessionId: gamesessionId}, (err, attendees) => {
         if(err){
             return callback(err, null);
         }
-        if(gamesession){
-            if(position){
-                PositionData.findOne({"userId": userID}, (err, pos) => {
-                    if(err){
-                        return callback(err, null)
-                    }
-                    if(pos){
-                        pos.position.push({"lat": position.lat, "lng": position.lng})
-                        pos.save().then(
-                            () => {
-                                return callback(null, gamesession)
+        if(attendees){
+            arrayAttendees = [];
+            for(let attendee in attendees){
+                arrayAttendees.push(attendee.userId);
+            }
+            PositionData.find({gamesessionId: gamesessionId}, (err2, positions) => {
+                if(err2){
+                    return callback(err2)
+                }
+                else if(positions){
+                    newestpositions = []
+                    for(let attendee in attendees){
+                        let tempPos = [];
+                        for(let pos in positions){
+                            if(pos.userId === attendee.userId){
+                                tempPos.push(pos);
                             }
-                        )
-                    }
-
-                    else{
-                        PositionData.create({"userId": userID, "position": position}, (err, posi) => {
-                            gamesession.userPositions.push(posi)
-                            gamesession.save().then(() => {return callback(null, gamesession)})
+                        }
+                        sort(function compareFn(a, b) {
+                            if (a.createdAt < b.createdAt) {
+                                return -1;
+                              }
+                            if (a.createdAt > b.createdAt) {
+                                return 1;
+                            }
+                            return 0;
+                        }).then(() => {
+                            newestPositions.push(tempPos[tempPos.length-1]);
                         })
                     }
-                })
-            }
-            else{
-                return callback(null, gamesession);
-            }
-            
+                    return callback(null, newestPositions);
+                }
+                else{
+                    return callback(new Error("404"));
+                }
+            })
         }
         else{
-            return callback(new Error("Couldn't find gamesession"));
+            return callback(new Error("404"));
         }
     })
+    
 }
 
 function create(gamesessionContent, callback){  
     Gamesession.create(gamesessionContent, (err, gamesession) => {
         if(err){
-            console.log("undefined error")
             return callback(err, null);
         }
         if(gamesession){
-            console.log("gamesession")
             return callback(null, gamesession);
         }
         else{
-            console.log("404")
             return callback(new Error("Couldn't create"));
         }
     })
@@ -103,35 +115,17 @@ function removeUserFromSession(userId, gamesessionId, callback){
     })
 }
 
-function endGame(gamesessionId, reason, callback){  
+function changeState(gamesessionId, gamestate, callback){  
     Gamesession.findById(gamesessionId, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }
         if(gamesession){
-            gamesession.reason = reason;
+            gamesession.gamestate = gamestate;
             gamesession.gameFinished = true;
             gamesession.save().then(() => {
                 return callback(null, gamesession);
             })
-        }
-        else{
-            return callback(new Error("404"));
-        }
-    })
-}
-
-function updatePositionData(userId, positionData, callback){
-    PositionData.find({'userId' : userId}, (err, pos) => {
-        if(err){
-            return err;
-        }
-        if(pos){
-            pos.position.push(positionData);
-            pos.save().then( () => {
-                return callback(null, null);
-            }  
-            )
         }
         else{
             return callback(new Error("404"));
@@ -145,6 +139,6 @@ module.exports = {
     getGamesession,
     deleteGamesession,
     removeUserFromSession,
-    updatePositionData,
-    endGame,
+    changeState,
+    joinGamesession,
 }

@@ -4,7 +4,9 @@ const Schema = mongoose.Schema
 
 const UserPosition = new Schema({
   userId: { type: Schema.ObjectId, ref: User, required: true },
-  position: { type: [{ lat: { type: String }, lng: { type: String } }] },
+  lat: { type: String }, 
+  lng: { type: String },
+  gamesessionId: { type: Schema.ObjectId, ref: Gamesession, required: true }
   }, { timestamp: true }
 )
 

@@ -4,11 +4,12 @@ const Gamemode = require ("../gamemode/GamemodeModel")
 const UserPosition = require("../userPosition/UserPositionModel")
 const Schema = mongoose.Schema
 
+
 const GamesessionModel = new Schema({
-  gamemode: { type: Schema.ObjectId, ref: Gamemode, required: true },
-  users: { type: [{ type: Schema.ObjectId, ref: User }], default: [] },
-  userPositions: { type: [{type: Schema.ObjectId}], ref: UserPosition, default: [] },
-  gameFinished: { type: Boolean },
+  creator: { type: Schema.ObjectId, ref: User, required: true },
+  gametime: { type: int, default: 5000},
+  gamestate: { type: string, default: "lobby"},
+  maximumUsers:{ type: Number },
   reason: { type: String },
 })
 

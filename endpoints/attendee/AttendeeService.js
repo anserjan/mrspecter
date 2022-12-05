@@ -1,6 +1,10 @@
-const UserPosition = require("./UserPositionModel")
+const UserPosition = require("./AttendeeModel")
 
-function updatePosition(data){
+function createAttendee(userId, gamesessionId){
+    data= {
+        userId: userId,
+        gamesessionId: gamesessionId,
+    }
     UserPosition.create(data, (err, position) => {
         if(err){
             return callback(err);
@@ -12,5 +16,5 @@ function updatePosition(data){
 }
 
 module.exports = {
-    updatePosition,
+    createAttendee,
 }
