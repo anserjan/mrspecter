@@ -88,7 +88,7 @@ router.get('/:gamesessionId/leave', isAuthenticated, (req, res) => {
 	})
 })
 
-router.post('/gamesession/:gamesessionId/updatePosition', isAuthenticated, (req, res) => {
+router.post('/gamesession/:gamesessionId/positions', isAuthenticated, (req, res) => {
 	userID=req.authenticatedUser.id;
 	posData = {
 		gamesessionId: req.params.gamesessionId,
