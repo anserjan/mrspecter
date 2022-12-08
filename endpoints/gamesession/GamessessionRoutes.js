@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const GamesessionService = require("./Gamesessionservice")
+const GamesessionService = require("./GamesessionService")
 const { isAuthenticated } = require("./AuthenticationService")
 const PositionService = require("../userPosition/UserPositionService")
 
@@ -42,6 +42,13 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 			return res.sendStatus(404);
 		}
 	  })
+})
+
+router.put('/:gamesessionId', isAuthenticated, (req, res) => {
+  GamesessionService.updateGamesession(req.params.gamesessionId, req.body,(error, result) => {
+    if(error) return res.status(500).json({error: error})
+    return res.status(200).send(result)
+  })
 })
 
 router.delete('/:gamesessionId', isAuthenticated, (req, res) => {

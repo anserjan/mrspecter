@@ -47,7 +47,7 @@ test('CREATE /gamesession', async () => {
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
-    console.log(res)
+    // console.log(res)
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("id");
 });
@@ -72,3 +72,23 @@ test('GET /gamesession', async () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("id");
 });
+
+test("put /gamesession/:gamesessionId", async() => {
+  var res = await request(app)
+    .post('/gamesession/')
+    .set('Content-type', 'application/json')
+    .set('Authorization', 'Bearer ' + testUser.auth_token)
+    .send()
+  gamesession = res.body
+
+  res = await request(app)
+    .put("/gamesession/" + gamesession.id)
+    .set("Content-type", "application/json")
+    .set("Authorization", "Bearer " + testUser.auth_token)
+    .send({huntedUser: testUser.id, gametime: "300", borders: [{lat: "123444", lng: "98765"}, {lat: "5667ss", lng: "anser"}]})
+  expect(res.statusCode).toBe(200)
+  expect(res.body).toHaveProperty("_id")
+  expect(res.body).toHaveProperty("huntedUser")
+  expect(res.body).toHaveProperty("gametime")
+  console.log(res.body)
+})
