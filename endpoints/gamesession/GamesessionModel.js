@@ -11,6 +11,8 @@ const GamesessionModel = new Schema({
   gamestate: { type: string, default: "lobby"},
   maximumUsers:{ type: Number },
   reason: { type: String },
+  borders: [{ lat : String, lng : String }],
+  huntedUser: { type: string },
 })
 
 module.exports = mongoose.model("Gamesession", GamesessionModel)

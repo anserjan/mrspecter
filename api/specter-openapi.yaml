@@ -89,6 +89,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  id:
+                    type: string
+                    example: "637620d6af622b1c8dbf7123"
                   creator:
                     type: string
                     example: "637620d6af622b1c8dbf7f7e"
@@ -103,6 +106,8 @@ paths:
                     example: 300
         "400":
           description: Gamesession can not be created
+      security:
+      - bearerAuth: []
   /gamesession/{gamesessionId}:
     get:
       summary: Get all nessesary gamesession data but not the positions
@@ -150,12 +155,20 @@ paths:
                   maximalUsers:
                     type: integer
                     description: maximum amount of users
+                  hunted:
+                    type: array
+                    description: list of hunted users
+                    items:
+                      type: string
+                      example: 637620d6af622b1c8dbf7f7e
                   gamestate:
                     type: string
                     description: current state of the gamesession
                     example: "LOBBY"
         "404":
           description: Gamessession doesn't exist
+      security:
+      - bearerAuth: []
     put:
       summary: Update gamesession rules like borders, maximalUsers, gametime, huntedUser
       parameters:
@@ -212,6 +225,8 @@ paths:
                     description: maximum amount of users
         "404":
           description: Gamesession does not exist
+      security:
+      - bearerAuth: []
     delete:
       summary: Destroy gamesessions all attended users and all positions
       parameters:
@@ -227,6 +242,8 @@ paths:
       responses:
         "200":
           description: Ok
+      security:
+        - bearerAuth: []
   /gamesession/{gamesessionId}/positions:
     post:
       summary: Send current position, get all positions
@@ -260,9 +277,11 @@ paths:
                         type: string
         "400":
           description: "Gamesession does not exist"
+      security:
+      - bearerAuth: []
   /gamesession/{gamesessionId}/start:
     get:
-      summary: Remove self from gamesession
+      summary: Starts the game
       parameters:
       - name: gamesessionId
         in: path
@@ -276,9 +295,11 @@ paths:
       responses:
         "200":
           description: Gamesession will beginn, gamestate will update
+      security:
+      - bearerAuth: []
   /gamesession/{gamesessionId}/finish:
     get:
-      summary: Remove self from gamesession
+      summary: Finishes the current game
       parameters:
       - name: gamesessionId
         in: path
@@ -287,11 +308,18 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
-          example: "637620d6af622b1c8dbf7f7e"
+          type: object
+          example: { user: "637620d6af622b1c8dbf7f7e", reason: "MrX found" }
+          properties:
+            user:
+              type: string
+            reason:
+              type: string
       responses:
         "200":
           description: Gamesession will stop, gamestate will update
+      security:
+      - bearerAuth: []
   /gamesession/{gamesessionId}/leave:
     get:
       summary: Remove self from gamesession
@@ -324,6 +352,8 @@ paths:
       responses:
         "200":
           description: "todo"
+      security:
+      - bearerAuth: []
 components:
   schemas:
     users_userId_body:
