@@ -6,7 +6,7 @@ const UserPosition = new Schema({
   userId: { type: Schema.ObjectId, ref: User, required: true },
   lat: { type: String }, 
   lng: { type: String },
-  gamesessionId: { type: Schema.ObjectId, ref: Gamesession, required: true }
+  gamesessionId: { type: Schema.ObjectId, ref: "Gamesession", required: true }
   }, { timestamp: true }
 )
 

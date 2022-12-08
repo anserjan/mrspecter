@@ -18,12 +18,21 @@ function joinGamesession(userId, gamesessionId){
     Attendees.createAttendee(userId, gamesessionId);
 }
 
-function getGamesession(gamesessionId, callback){  
-    Gamesession.findById(gamesessionId, (err, gamesession) => {
+function getGamesession(req, callback){  
+    Gamesession.findById(req.params.gamesessionId, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }
         if(gamesession){
+            if(!req.authenticatedUser.id in gamesession.users){
+                Gamesession.updateOne({_id:req.params.gamesessionId},
+                    { $addToSet: { users: [req.authenticatedUser.id] } },
+                    function (err, raw) {
+                        if (err) return callback(err, null);
+                        return callback(null, raw);
+                    }
+                 )
+            }
             return callback(null, gamesession);
         }
         else{
@@ -33,8 +42,13 @@ function getGamesession(gamesessionId, callback){
     
 }
 
-function create(gamesessionContent, callback){  
-    Gamesession.create(gamesessionContent, (err, gamesession) => {
+function create(req, callback){
+    let gamesession_object = {
+        ...req.body,
+        creator: req.authenticatedUser.id,
+        // users:[req.authenticatedUser.id]
+    }  
+    Gamesession.create(gamesession_object, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }

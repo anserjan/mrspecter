@@ -155,12 +155,15 @@ paths:
                   maximalUsers:
                     type: integer
                     description: maximum amount of users
-                  hunted:
-                    type: array
-                    description: list of hunted users
-                    items:
-                      type: string
-                      example: 637620d6af622b1c8dbf7f7e
+                  huntedUser:
+                    type: string
+                    example: 637620d6af622b1c8dbf7f7e
+                  # hunted:
+                  #   type: array
+                  #   description: list of hunted users
+                  #   items:
+                  #     type: string
+                  #     example: 637620d6af622b1c8dbf7f7e
                   gamestate:
                     type: string
                     description: current state of the gamesession

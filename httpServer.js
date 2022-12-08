@@ -1,7 +1,6 @@
 const express = require('express')
 const testRoutes = require("./endpoints/test/testRoutes")
 const userRoutes = require("./endpoints/user/userRoutes")
-const lobbyRoutes = require("./endpoints/lobby/LobbyRoutes")
 const gamesessionRoutes = require("./endpoints/gamesession/GamessessionRoutes")
 const database = require('./database/db')
 
@@ -15,7 +14,6 @@ app.use(express.json())
 
 app.use('/', testRoutes);
 app.use('/user', userRoutes)
-app.use('/lobby', lobbyRoutes)
 app.use('/gamesession', gamesessionRoutes)
 
 

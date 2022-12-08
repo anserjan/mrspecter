@@ -6,12 +6,13 @@ const PositionService = require("../userPosition/UserPositionService")
 
 router.post('/', isAuthenticated, (req, res) => {
 	
-	GamesessionService.create(req.body, (error, gamesession) => {
+	GamesessionService.create(req, (error, gamesession) => {
     if(error){
 		return res.status(500).json({error: error})
 	}
 	if(gamesession){
-		return res.status(201).json(gamesession)
+		let partialobject = {id: gamesession.id}
+		return res.status(201).json(partialobject)
 	}
 	else{
 		return res.sendStatus(400);
@@ -24,7 +25,7 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 	
 	position = req.body;
 	
-	GamesessionService.getGamesession(req.params.gamesessionId, req.authenticatedUser.id, position, (error, gamesession) => {
+	GamesessionService.getGamesession(req, (error, gamesession) => {
 		if(error){
 			if(error.message == "404"){
 				return res.sendStatus(404);
