@@ -10,7 +10,7 @@ const gamesessionRoutes = require("../../endpoints/gamesession/GamessessionRoute
 const {createUser}  = require("../../endpoints/user/userService");
 const User  = require("../../endpoints/user/userModel");
 const { isAuthenticated } = require("../../endpoints/user/AuthenticationService");
-
+const Gamesession = require("../../endpoints/gamesession/GamesessionModel")
 
 const app = new express();
 app.use(express.json()) // for parsing application/json
@@ -70,6 +70,7 @@ test('GET /gamesession', async () => {
         .send()
     console.log(res)
     expect(res.statusCode).toBe(200);
+<<<<<<< HEAD
     expect(res.body).toHaveProperty("id");
 });
 
@@ -92,3 +93,38 @@ test("put /gamesession/:gamesessionId", async() => {
   expect(res.body).toHaveProperty("gametime")
   console.log(res.body)
 })
+=======
+    // expect(res.body).toHaveProperty("id");
+
+    console.log(await Gamesession.find())
+});
+
+test('leave /gamesession', async () => {
+    const session = await request(app)
+        .post('/gamesession/')
+        .set('Content-type', 'application/json')
+        .set('Authorization', 'Bearer ' + testUser.auth_token)
+        .send()
+    // const res2 = await request(app)
+    //     .get('/gamesession/'+ session.body.id)
+    //     .set('Content-type', 'application/json')
+    //     .set('Authorization', 'Bearer ' + testUser.auth_token)
+    //     .send()
+    const res = await request(app)
+        .get('/gamesession/'+ session.body.id)
+        .set('Content-type', 'application/json')
+        .set('Authorization', 'Bearer ' + testUser.auth_token)
+        .send()
+
+    const res2 = await request(app)
+        .get('/gamesession/'+ session.body.id + '/leave')
+        .set('Content-type', 'application/json')
+        .set('Authorization', 'Bearer ' + testUser.auth_token)
+        .send()
+    console.log(res)
+    expect(res.statusCode).toBe(200);
+    expect(res2.body).toHaveProperty("id");
+
+    console.log(await Gamesession.find())
+});
+>>>>>>> c29105028b65b472e650c1cdb0ec90a3532665d6
