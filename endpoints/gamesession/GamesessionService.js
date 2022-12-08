@@ -24,7 +24,7 @@ function getGamesession(req, callback){
             return callback(err, null);
         }
         if(gamesession){
-            if(!req.authenticatedUser.id in gamesession.users){
+            if(!(req.authenticatedUser.id in gamesession.users)){
                 Gamesession.updateOne({_id:req.params.gamesessionId},
                     { $addToSet: { users: [req.authenticatedUser.id] } },
                     function (err, raw) {
