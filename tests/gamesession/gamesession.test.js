@@ -70,7 +70,36 @@ test('GET /gamesession', async () => {
         .send()
     console.log(res)
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty("id");
+    // expect(res.body).toHaveProperty("id");
+
+    console.log(await Gamesession.find())
+});
+
+test('leave /gamesession', async () => {
+    const session = await request(app)
+        .post('/gamesession/')
+        .set('Content-type', 'application/json')
+        .set('Authorization', 'Bearer ' + testUser.auth_token)
+        .send()
+    // const res2 = await request(app)
+    //     .get('/gamesession/'+ session.body.id)
+    //     .set('Content-type', 'application/json')
+    //     .set('Authorization', 'Bearer ' + testUser.auth_token)
+    //     .send()
+    const res = await request(app)
+        .get('/gamesession/'+ session.body.id)
+        .set('Content-type', 'application/json')
+        .set('Authorization', 'Bearer ' + testUser.auth_token)
+        .send()
+
+    const res2 = await request(app)
+        .get('/gamesession/'+ session.body.id + '/leave')
+        .set('Content-type', 'application/json')
+        .set('Authorization', 'Bearer ' + testUser.auth_token)
+        .send()
+    console.log(res)
+    expect(res.statusCode).toBe(200);
+    expect(res2.body).toHaveProperty("id");
 
     console.log(await Gamesession.find())
 });
