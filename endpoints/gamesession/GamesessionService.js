@@ -42,6 +42,21 @@ function getGamesession(req, callback){
     
 }
 
+function updateGamesession(gamesessionId, gamesessionData, callback) {
+  Gamesession.findById(gamesessionId, (error, gamesession) => {
+    if(error) return callback(error, null)
+    if(gamesession) {
+      if(gamesessionData.huntedUser) gamesession.huntedUser = gamesessionData.huntedUser
+      if(gamesessionData.gametime) gamesession.gametime = gamesessionData.gametime
+      if(gamesessionData.borders) gamesession.borders = gamesessionData.borders
+      if(gamesessionData.maximumUsers) gamesession.maximumUsers = gamesessionData.maximumUsers
+      if(gamesessionData.huntedUser) gamesession.huntedUser = gamesessionData.huntedUser
+      return callback(null, gamesession)
+    }
+    return callback(new Error("unknown gamesessionUpdae Prolem"), null)
+  })
+}
+
 function create(req, callback){
     let gamesession_object = {
         ...req.body,
@@ -121,4 +136,5 @@ module.exports = {
     removeUserFromSession,
     changeState,
     joinGamesession,
+    updateGamesession
 }
