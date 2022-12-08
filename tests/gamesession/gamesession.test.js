@@ -47,7 +47,6 @@ test('CREATE /gamesession', async () => {
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
-    // console.log(res)
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("_id");
 });
@@ -58,21 +57,14 @@ test('GET /gamesession', async () => {
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
-    // const res2 = await request(app)
-    //     .get('/gamesession/'+ session.body.id)
-    //     .set('Content-type', 'application/json')
-    //     .set('Authorization', 'Bearer ' + testUser.auth_token)
-    //     .send()
+
     const res = await request(app)
         .get('/gamesession/'+ session.body._id)
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
-    console.log(res)
     expect(res.statusCode).toBe(200);
-    // expect(res.body).toHaveProperty("id");
-
-    console.log(await Gamesession.find())
+    expect(res.body).toHaveProperty("_id");
 });
 
 test('leave /gamesession', async () => {

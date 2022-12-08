@@ -25,17 +25,13 @@ function getGamesession(req, callback){
         }
         if(gamesession){
             if(!(gamesession.users.includes(req.authenticatedUser.id))){
-                Gamesession.findOneAndUpdate({_id:req.params.gamesessionId},
-                    { $push: { users: req.authenticatedUser.id } }
-                    ,{new: true},function (err, raw) {
-                        if (err) return callback(err, null);
-                        return callback(null, raw);
-                    }
-                 )
+                gamesession.users.push(req.authenticatedUser.id)
+                gamesession.save().then(() => {
+                  return callback(null, gamesession)
+                })
             }else{
                 return callback(null, gamesession);
             }
-            
         }
         else{
             return callback(new Error("404"));

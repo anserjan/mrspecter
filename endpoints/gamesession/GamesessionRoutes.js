@@ -35,7 +35,7 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 			}
 		}
 		if(gamesession){
-			return res.status(200).json({gamesession: gamesession});
+			return res.status(200).json(gamesession);
 		}
 		else{
 			return res.sendStatus(404);
