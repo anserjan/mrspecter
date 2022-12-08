@@ -169,7 +169,7 @@ paths:
                     description: current state of the gamesession
                     example: "LOBBY"
         "404":
-          description: Gamessession doesn't exist
+          description: Gamesession doesn't exist
       security:
       - bearerAuth: []
     put:

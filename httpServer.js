@@ -1,7 +1,7 @@
 const express = require('express')
 const testRoutes = require("./endpoints/test/testRoutes")
 const userRoutes = require("./endpoints/user/userRoutes")
-const gamesessionRoutes = require("./endpoints/gamesession/GamessessionRoutes")
+const gamesessionRoutes = require("./endpoints/gamesession/GamesessionRoutes")
 const database = require('./database/db')
 
 const app = express()

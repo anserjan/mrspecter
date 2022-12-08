@@ -6,7 +6,7 @@ const request = require("supertest");
 const {DB} = require("../DB")
 
 const userRoutes = require("../../endpoints/user/userRoutes")
-const gamesessionRoutes = require("../../endpoints/gamesession/GamessessionRoutes")
+const gamesessionRoutes = require("../../endpoints/gamesession/GamesessionRoutes")
 const {createUser}  = require("../../endpoints/user/userService");
 const User  = require("../../endpoints/user/userModel");
 const { isAuthenticated } = require("../../endpoints/user/AuthenticationService");
@@ -99,7 +99,7 @@ test('leave /gamesession', async () => {
         .send()
     console.log(res)
     expect(res.statusCode).toBe(200);
-    expect(res2.body).toHaveProperty("id");
+    // expect(res2.body).toHaveProperty("id");
 
     console.log(await Gamesession.find())
 });
@@ -121,5 +121,5 @@ test("put /gamesession/:gamesessionId", async() => {
   expect(res.body).toHaveProperty("_id")
   expect(res.body).toHaveProperty("huntedUser")
   expect(res.body).toHaveProperty("gametime")
-  console.log(res.body)
+  expect(res.body.gametime).toBe(300)
 })
