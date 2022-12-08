@@ -52,13 +52,12 @@ function updateGamesession(gamesessionId, gamesessionData, callback) {
       if(gamesessionData.gametime) gamesession.gametime = gamesessionData.gametime
       if(gamesessionData.borders) gamesession.borders = gamesessionData.borders
       if(gamesessionData.maximumUsers) gamesession.maximumUsers = gamesessionData.maximumUsers
-      if(gamesessionData.huntedUser) gamesession.huntedUser = gamesessionData.huntedUser
       gamesession.save().then(() => {
         return callback(null, gamesession)
       })
     }
-    return callback(new Error("unknown gamesessionUpdae Prolem"), null)
   })
+  // return callback(new Error("unknown gamesessionUpdate problem"), null)
 }
 
 function create(req, callback){
