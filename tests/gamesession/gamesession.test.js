@@ -49,7 +49,7 @@ test('CREATE /gamesession', async () => {
         .send()
     // console.log(res)
     expect(res.statusCode).toBe(201);
-    expect(res.body).toHaveProperty("id");
+    expect(res.body).toHaveProperty("_id");
 });
 
 test('GET /gamesession', async () => {
@@ -64,7 +64,7 @@ test('GET /gamesession', async () => {
     //     .set('Authorization', 'Bearer ' + testUser.auth_token)
     //     .send()
     const res = await request(app)
-        .get('/gamesession/'+ session.body.id)
+        .get('/gamesession/'+ session.body._id)
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
@@ -87,21 +87,19 @@ test('leave /gamesession', async () => {
     //     .set('Authorization', 'Bearer ' + testUser.auth_token)
     //     .send()
     const res = await request(app)
-        .get('/gamesession/'+ session.body.id)
+        .get('/gamesession/'+ session.body._id)
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
 
     const res2 = await request(app)
-        .get('/gamesession/'+ session.body.id + '/leave')
+        .get('/gamesession/'+ session.body._id + '/leave')
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
-    console.log(res)
     expect(res.statusCode).toBe(200);
     // expect(res2.body).toHaveProperty("id");
 
-    console.log(await Gamesession.find())
 });
 
 test("put /gamesession/:gamesessionId", async() => {
@@ -113,7 +111,7 @@ test("put /gamesession/:gamesessionId", async() => {
   gamesession = res.body
 
   res = await request(app)
-    .put("/gamesession/" + gamesession.id)
+    .put("/gamesession/" + gamesession._id)
     .set("Content-type", "application/json")
     .set("Authorization", "Bearer " + testUser.auth_token)
     .send({huntedUser: testUser.id, gametime: "300", borders: [{lat: "123444", lng: "98765"}, {lat: "5667ss", lng: "anser"}]})

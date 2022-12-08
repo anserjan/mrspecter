@@ -11,8 +11,7 @@ router.post('/', isAuthenticated, (req, res) => {
 		return res.status(500).json({error: error})
 	}
 	if(gamesession){
-		let partialobject = {id: gamesession.id}
-		return res.status(201).json(partialobject)
+		return res.status(201).json(gamesession)
 	}
 	else{
 		return res.sendStatus(400);

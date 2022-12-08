@@ -55,9 +55,10 @@ function updateGamesession(gamesessionId, gamesessionData, callback) {
       gamesession.save().then(() => {
         return callback(null, gamesession)
       })
+    } else {
+      return callback(new Error("unknown gamesessionUpdate problem"), null)
     }
   })
-  // return callback(new Error("unknown gamesessionUpdate problem"), null)
 }
 
 function create(req, callback){
