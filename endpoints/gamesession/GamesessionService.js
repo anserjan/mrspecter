@@ -53,7 +53,9 @@ function updateGamesession(gamesessionId, gamesessionData, callback) {
       if(gamesessionData.borders) gamesession.borders = gamesessionData.borders
       if(gamesessionData.maximumUsers) gamesession.maximumUsers = gamesessionData.maximumUsers
       if(gamesessionData.huntedUser) gamesession.huntedUser = gamesessionData.huntedUser
-      return callback(null, gamesession)
+      gamesession.save().then(() => {
+        return callback(null, gamesession)
+      })
     }
     return callback(new Error("unknown gamesessionUpdae Prolem"), null)
   })
