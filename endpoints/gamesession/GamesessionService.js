@@ -25,15 +25,17 @@ function getGamesession(req, callback){
         }
         if(gamesession){
             if(!(req.authenticatedUser.id in gamesession.users)){
-                Gamesession.updateOne({_id:req.params.gamesessionId},
-                    { $addToSet: { users: [req.authenticatedUser.id] } },
-                    function (err, raw) {
+                Gamesession.findOneAndUpdate({_id:req.params.gamesessionId},
+                    { $push: { users: req.authenticatedUser.id } }
+                    ,{new: true},function (err, raw) {
                         if (err) return callback(err, null);
                         return callback(null, raw);
                     }
                  )
+            }else{
+                return callback(null, gamesession);
             }
-            return callback(null, gamesession);
+            
         }
         else{
             return callback(new Error("404"));
@@ -46,7 +48,7 @@ function create(req, callback){
     let gamesession_object = {
         ...req.body,
         creator: req.authenticatedUser.id,
-        // users:[req.authenticatedUser.id]
+        users:[req.authenticatedUser.id]
     }  
     Gamesession.create(gamesession_object, (err, gamesession) => {
         if(err){

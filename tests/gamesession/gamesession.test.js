@@ -10,7 +10,7 @@ const gamesessionRoutes = require("../../endpoints/gamesession/GamessessionRoute
 const {createUser}  = require("../../endpoints/user/userService");
 const User  = require("../../endpoints/user/userModel");
 const { isAuthenticated } = require("../../endpoints/user/AuthenticationService");
-
+const Gamesession = require("../../endpoints/gamesession/GamesessionModel")
 
 const app = new express();
 app.use(express.json()) // for parsing application/json
@@ -71,4 +71,6 @@ test('GET /gamesession', async () => {
     console.log(res)
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("id");
+
+    console.log(await Gamesession.find())
 });
