@@ -1,0 +1,403 @@
+openapi: 3.0.0
+info:
+  title: MrSpecter API
+  description: API
+  version: 2.0.0
+servers:
+- url: https://app.swaggerhub.com/apis/anserjan/Gamesession/2.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://localhost:8080
+  description: Local Testing Server
+paths:
+  /user:
+    post:
+      summary: Adds a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/users_body'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: User couldn't be created
+  /user/{userId}:
+    get:
+      summary: Get a user by ID
+      parameters:
+      - name: userId
+        in: path
+        description: Numeric ID of the user to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users_body'
+        "400":
+          description: User doesn't exist
+    put:
+      summary: Changes user info (bearerAuth)
+      parameters:
+      - name: userId
+        in: path
+        description: Numeric ID of the user to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/users_userId_body'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: User couldn't be changed
+        "403":
+          description: Authentication failed
+      security:
+      - bearerAuth: []
+  /gamesession:
+    post:
+      summary: Creates a gamesession
+      responses:
+        "201":
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "637620d6af622b1c8dbf7123"
+                  creator:
+                    type: string
+                    example: "637620d6af622b1c8dbf7f7e"
+                  users:
+                    type: array
+                    items:
+                      type: string
+                      example: "637620d6af622b1c8dbf7f7e"
+                  gametime:
+                    type: integer
+                    description: Gametime in Seconds
+                    example: 300
+        "400":
+          description: Gamesession can not be created
+      security:
+      - bearerAuth: []
+  /gamesession/{gamesessionId}:
+    get:
+      summary: Get all nessesary gamesession data but not the positions
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                    example: "637620d6af622b1c8dbf7f7e"
+                  users:
+                    type: array
+                    items:
+                      type: string
+                      example: "637620d6af622b1c8dbf7f7e"
+                  gametime:
+                    type: integer
+                    description: Gametime in Seconds
+                    example: 300
+                  borders:
+                    type: array
+                    description: get array of geolocations
+                    items:
+                      type: object
+                      example: {  lat: "5902302390", lng: "2349440234" }
+                      properties:
+                        lat:
+                          type: string
+                        lng:
+                          type: string
+                  maximalUsers:
+                    type: integer
+                    description: maximum amount of users
+                  huntedUser:
+                    type: string
+                    example: 637620d6af622b1c8dbf7f7e
+                  # hunted:
+                  #   type: array
+                  #   description: list of hunted users
+                  #   items:
+                  #     type: string
+                  #     example: 637620d6af622b1c8dbf7f7e
+                  gamestate:
+                    type: string
+                    description: current state of the gamesession
+                    example: "LOBBY"
+        "404":
+          description: Gamesession doesn't exist
+      security:
+      - bearerAuth: []
+    put:
+      summary: Update gamesession rules like borders, maximalUsers, gametime, huntedUser
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      requestBody:
+        description: One or more attributes of the gamesession to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: { huntedUser: "637620d6af622b1c8dbf7f7e", borders: [{ lat: "3942032092", lng: "5959502021" }, {lat: "6464588856", lng: "65645787843" } ] }
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  creator:
+                    type: string
+                    example: "637620d6af622b1c8dbf7f7e"
+                  users:
+                    type: array
+                    items:
+                      type: string
+                      example: "637620d6af622b1c8dbf7f7e"
+                  gametime:
+                    type: integer
+                    description: Gametime in Seconds
+                    example: 300
+                  borders:
+                    type: array
+                    description: get array of geolocations
+                    items:
+                      type: object
+                      example: {  lat: "5902302390", lng: "2349440234" }
+                      properties:
+                        lat:
+                          type: string
+                        lng:
+                          type: string
+                  maximalUsers:
+                    type: integer
+                    description: maximum amount of users
+        "404":
+          description: Gamesession does not exist
+      security:
+      - bearerAuth: []
+    delete:
+      summary: Destroy gamesessions all attended users and all positions
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: Ok
+      security:
+        - bearerAuth: []
+  /gamesession/{gamesessionId}/positions:
+    post:
+      summary: Send current position, get all positions
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  positions:
+                    type: object
+                    example: { user: "637620d6af622b1c8dbf7f7e", lat: "5902302390", lng: "2349440234" }
+                    properties:
+                      user:
+                        type: string
+                      lat:
+                        type: string
+                      lng:
+                        type: string
+        "400":
+          description: "Gamesession does not exist"
+      security:
+      - bearerAuth: []
+  /gamesession/{gamesessionId}/start:
+    get:
+      summary: Starts the game
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: Gamesession will beginn, gamestate will update
+      security:
+      - bearerAuth: []
+  /gamesession/{gamesessionId}/finish:
+    get:
+      summary: Finishes the current game
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: object
+          example: { user: "637620d6af622b1c8dbf7f7e", reason: "MrX found" }
+          properties:
+            user:
+              type: string
+            reason:
+              type: string
+      responses:
+        "200":
+          description: Gamesession will stop, gamestate will update
+      security:
+      - bearerAuth: []
+  /gamesession/{gamesessionId}/leave:
+    get:
+      summary: Remove self from gamesession
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: Remove user from userlist
+  /gamesession/{gamesessionId}/ruleViolation:
+    post:
+      summary: Send own rule violation the notify all users in their next pull
+      parameters:
+      - name: gamesessionId
+        in: path
+        description: Numeric ID of the gamesession to get
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
+      responses:
+        "200":
+          description: "todo"
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    users_userId_body:
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: Thomas
+    users_body:
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: Jessica
+    inline_response_200_1:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      example:
+        id: "637620d6af622b1c8dbf7f7e"
+        name: Thomas
+    inline_response_200:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        auth_token:
+          type: string
+      example:
+        id: "637620d6af622b1c8dbf7f7e"
+        name: Jessica
+        auth_token: vuuunrv82nrvu29rvn238r2vnr23v23v
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,5 +1,16 @@
 const UserPosition = require("./UserPositionModel")
 
-//TODO
+function updatePosition(data){
+    UserPosition.create(data, (err, position) => {
+        if(err){
+            return callback(err);
+        }
+        else{
+            return callback(null, position);
+        }
+    })
+}
 
-module.exports = {}
+module.exports = {
+    updatePosition,
+}
