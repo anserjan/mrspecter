@@ -104,6 +104,9 @@ paths:
                     type: integer
                     description: Gametime in Seconds
                     example: 300
+                  huntedUser:
+                    type: string
+                    example: "637620d6af622b1c8dbf7f7e"
         "400":
           description: Gamesession can not be created
       security:
@@ -266,18 +269,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  positions:
-                    type: object
-                    example: { user: "637620d6af622b1c8dbf7f7e", lat: "5902302390", lng: "2349440234" }
-                    properties:
-                      user:
-                        type: string
-                      lat:
-                        type: string
-                      lng:
-                        type: string
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user:
+                      type: string
+                      example: "637620d6af622b1c8dbf7f7e"
+                    lat:
+                      type: string
+                      example: "5902302390"
+                    lng:
+                      type: string
+                      example: "2349440234"
         "400":
           description: "Gamesession does not exist"
       security:
