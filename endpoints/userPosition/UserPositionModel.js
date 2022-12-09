@@ -7,7 +7,7 @@ const UserPosition = new Schema({
   lat: { type: String }, 
   lng: { type: String },
   gamesessionId: { type: Schema.ObjectId, ref: "Gamesession", required: true }
-  }, { timestamp: true }
+  }, { timestamps: true }
 )
 
 module.exports = mongoose.model("UserPosition", UserPosition)
