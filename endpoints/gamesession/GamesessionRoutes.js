@@ -96,7 +96,6 @@ router.get('/:gamesessionId/leave', isAuthenticated, (req, res) => {
 })
 
 router.post('/:gamesessionId/positions', isAuthenticated, (req, res) => {
-	userID=req.authenticatedUser.id;
 	posData = {
 		gamesessionId: req.params.gamesessionId,
 		userId: req.authenticatedUser.id,
@@ -104,12 +103,8 @@ router.post('/:gamesessionId/positions', isAuthenticated, (req, res) => {
 		lng: req.body.lng,
 	}
 	PositionService.updatePosition(posData, (err, pos) => {
-		if(err){
-			return res.status(500).json({error: err});
-		}
-		else{
-			return res.status(201).json(pos);
-		}
+		if(err)return res.status(500).json({error: err})
+    return res.status(201).json(pos)
 	})
 })
 
