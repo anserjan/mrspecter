@@ -64,7 +64,7 @@ router.delete('/:gamesessionId', isAuthenticated, (req, res) => {
 	})
 })
 
-router.put('/gamefinished/:gamesessionId', isAuthenticated, (req, res) => {
+router.get('/:gamesessionId/gamefinished', isAuthenticated, (req, res) => {
 	GamesessionService.endGame(req.params.gamesessionId, req.body.gamestate, (err, gamesession) => {
 		if(err){
 			if(err.message == "404"){
@@ -95,7 +95,7 @@ router.get('/:gamesessionId/leave', isAuthenticated, (req, res) => {
 	})
 })
 
-router.post('/gamesession/:gamesessionId/positions', isAuthenticated, (req, res) => {
+router.post('/:gamesessionId/positions', isAuthenticated, (req, res) => {
 	userID=req.authenticatedUser.id;
 	posData = {
 		gamesessionId: req.params.gamesessionId,

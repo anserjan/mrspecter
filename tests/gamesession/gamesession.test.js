@@ -65,6 +65,8 @@ test('GET /gamesession', async () => {
         .send()
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("_id");
+    expect(res.body.users).toContain(testUser.id)
+    expect(res.body).toHaveProperty("huntedUser")
 });
 
 test('leave /gamesession', async () => {
@@ -90,7 +92,7 @@ test('leave /gamesession', async () => {
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
     expect(res.statusCode).toBe(200);
-    // expect(res2.body).toHaveProperty("id");
+    // expect(res2.body).toHaveProperty("_id");
 
 });
 
@@ -112,4 +114,14 @@ test("put /gamesession/:gamesessionId", async() => {
   expect(res.body).toHaveProperty("huntedUser")
   expect(res.body).toHaveProperty("gametime")
   expect(res.body.gametime).toBe(300)
+
+  res = await request(app)
+    .get("/gamesession/" + gamesession._id)
+    .set("Content-type", "application/json")
+    .set("Authorization", "Bearer " + testUser.auth_token)
+    .send()
+  expect(res.statusCode).toBe(200)
+  expect(res.body).toHaveProperty("borders")
+  expect(res.body.gametime).toBe(300)
+  expect(res.body.creator).toContain(testUser.id)
 })
