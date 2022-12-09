@@ -89,7 +89,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     example: "637620d6af622b1c8dbf7123"
                   creator:
@@ -273,7 +273,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    user:
+                    userId:
                       type: string
                       example: "637620d6af622b1c8dbf7f7e"
                     lat:
