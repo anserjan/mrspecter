@@ -80,7 +80,6 @@ describe('Express User Routes', function () {
             .send({name:"Neuer Name Juhuu"})
         expect(res.statusCode).toBe(200);
         expect(res.body).toMatchObject({name:"Neuer Name Juhuu"});
-        // console.log(res.text)
     });
 
     test('Change user name not found', async () => {
@@ -107,7 +106,6 @@ describe('Express User Routes', function () {
             .send({name:"Bobby123"})
         expect(res.statusCode).toBe(400);
         expect(res.text).toContain("Cannot change data of another user")
-        // console.log(res.text)
     });
   
     test('Delete user', async () => {
@@ -121,7 +119,6 @@ describe('Express User Routes', function () {
         res = await request(app).get('/user/'+testUser.id);
         expect(res.statusCode).toBe(404);
         expect(res.text).toContain("UserID existiert nicht")
-        // console.log(res.text)
     });
 
     test('Authenticate after delete', async () => {
@@ -148,7 +145,6 @@ describe('Express User Routes', function () {
         req = {headers : {authorization: "Bearer " + testUser.auth_token}}
         res = {}
         isAuthenticated(req, res, () => {
-            // console.log(req)
             expect(req.authenticatedUser.id).toBe(testUser.id)
             expect(req.authenticatedUser.name).toBe(testUser.name)
             
