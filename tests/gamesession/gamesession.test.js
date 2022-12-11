@@ -48,7 +48,7 @@ test('CREATE /gamesession', async () => {
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
     expect(res.statusCode).toBe(201);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body).toHaveProperty("id");
 });
 
 test('GET /gamesession', async () => {
@@ -59,12 +59,12 @@ test('GET /gamesession', async () => {
         .send()
 
     const res = await request(app)
-        .get('/gamesession/'+ session.body._id)
+        .get('/gamesession/'+ session.body.id)
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty("_id");
+    expect(res.body).toHaveProperty("id");
     expect(res.body.users).toContain(testUser.id)
     expect(res.body).toHaveProperty("huntedUser")
 });
@@ -81,13 +81,13 @@ test('leave /gamesession', async () => {
     //     .set('Authorization', 'Bearer ' + testUser.auth_token)
     //     .send()
     const res = await request(app)
-        .get('/gamesession/'+ session.body._id)
+        .get('/gamesession/'+ session.body.id)
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
 
     const res2 = await request(app)
-        .get('/gamesession/'+ session.body._id + '/leave')
+        .get('/gamesession/'+ session.body.id + '/leave')
         .set('Content-type', 'application/json')
         .set('Authorization', 'Bearer ' + testUser.auth_token)
         .send()
@@ -105,16 +105,16 @@ test("put /gamesession/:gamesessionId", async() => {
   gamesession = res.body
 
   res = await request(app)
-    .put("/gamesession/" + gamesession._id)
+    .put("/gamesession/" + gamesession.id)
     .set("Content-type", "application/json")
     .set("Authorization", "Bearer " + testUser.auth_token)
     .send({huntedUser: testUser.id, gametime: "300", borders: [{lat: "123444", lng: "98765"}, {lat: "5667ss", lng: "anser"}]})
   expect(res.statusCode).toBe(200)
-  expect(res.body).toHaveProperty("_id", "huntedUser", "gametime")
+  expect(res.body).toHaveProperty("id", "huntedUser", "gametime")
   expect(res.body.gametime).toBe(300)
 
   res = await request(app)
-    .get("/gamesession/" + gamesession._id)
+    .get("/gamesession/" + gamesession.id)
     .set("Content-type", "application/json")
     .set("Authorization", "Bearer " + testUser.auth_token)
     .send()
@@ -134,7 +134,7 @@ test("POST positions multiple times with one user /gamesession/:gamesessionId/po
   gamesession = res.body
   
   res = await request(app)
-    .post("/gamesession/"+gamesession._id+"/positions")
+    .post("/gamesession/"+gamesession.id+"/positions")
     .set('Content-type', 'application/json')
     .set('Authorization', 'Bearer ' + testUser.auth_token)
     .send({lat: "12355", lng: "65444"})
@@ -146,7 +146,7 @@ test("POST positions multiple times with one user /gamesession/:gamesessionId/po
   expect(res.body[0].userId).toContain(testUser.id)
 
   res = await request(app)
-    .post("/gamesession/"+gamesession._id+"/positions")
+    .post("/gamesession/"+gamesession.id+"/positions")
     .set('Content-type', 'application/json')
     .set('Authorization', 'Bearer ' + testUser.auth_token)
     .send({lat: "22222", lng: "33333"})
@@ -169,7 +169,7 @@ test("POST multiple positions with multiple users /gamesession/:gamesessionId/po
 
   // create position from user 1
   res = await request(app)
-    .post("/gamesession/"+gamesession._id+"/positions")
+    .post("/gamesession/"+gamesession.id+"/positions")
     .set("Content-type", "application/json")
     .set("Authorization", "Bearer " + testUser.auth_token)
     .send({lat: "12355", lng: "65444"})
@@ -182,7 +182,7 @@ test("POST multiple positions with multiple users /gamesession/:gamesessionId/po
   
   // update position from user 1
   res = await request(app)
-    .post("/gamesession/"+gamesession._id+"/positions")
+    .post("/gamesession/"+gamesession.id+"/positions")
     .set('Content-type', 'application/json')
     .set('Authorization', 'Bearer ' + testUser.auth_token)
     .send({lat: "22222", lng: "33333"})
@@ -207,7 +207,7 @@ test("POST multiple positions with multiple users /gamesession/:gamesessionId/po
 
   // create and get positions via second user
   res = await request(app)
-    .post("/gamesession/"+gamesession._id+"/positions")
+    .post("/gamesession/"+gamesession.id+"/positions")
     .set("Content-type", "application/json")
     .set("Authorization", "Bearer " + secondUser.auth_token)
     .send({lat: "ghghg", lng: "adadadad"})

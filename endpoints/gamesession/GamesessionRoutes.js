@@ -30,7 +30,7 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 			for (const element of borders) {
 				newBorders.push({lat:element.lat, lng:element.lng})
 			}
-			const subset = {id, creator, users, gametime, gamestate, huntedUser, newBorders};
+			const subset = {id, creator, users, gametime, gamestate, huntedUser, borders:newBorders};
 			return res.status(200).json(subset);
 		}
 		else{
@@ -47,7 +47,7 @@ router.put('/:gamesessionId', isAuthenticated, (req, res) => {
 		for (const element of borders) {
 			newBorders.push({lat:element.lat, lng:element.lng})
 		}
-		const subset = {id, creator, users, gametime, gamestate, huntedUser, newBorders};
+		const subset = {id, creator, users, gametime, gamestate, huntedUser, borders:newBorders};
 		return res.status(200).json(subset);
 	}
 	else{
