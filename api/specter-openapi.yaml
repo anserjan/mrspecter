@@ -4,8 +4,6 @@ info:
   description: API
   version: 2.0.0
 servers:
-- url: https://app.swaggerhub.com/apis/anserjan/Gamesession/2.0.0
-  description: SwaggerHub API Auto Mocking
 - url: http://localhost:8080
   description: Local Testing Server
 paths:
@@ -16,16 +14,40 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/users_body'
+              type: object
+              properties:
+                name:
+                  type: string
+              example:
+                name: Jessica
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200'
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  auth_token:
+                    type: string
+                example:
+                  id: "637620d6af622b1c8dbf7f7e"
+                  name: Jessica
+                  auth_token: vuuunrv82nrvu29rvn238r2vnr23v23v
         "400":
           description: User couldn't be created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "name field missing in body"
   /user/{userId}:
     get:
       summary: Get a user by ID
@@ -46,8 +68,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/users_body'
-        "400":
+        "404":
           description: User doesn't exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "UserID existiert nicht: 637620d6af622b1c8dbf7f7e"
+
     put:
       summary: Changes user info (bearerAuth)
       parameters:
@@ -71,11 +102,35 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                example:
+                  id: "637620d6af622b1c8dbf7f7e"
+                  name: Thomas
         "400":
           description: User couldn't be changed
-        "403":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        "401":
           description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Authorization header missing"
       security:
       - bearerAuth: []
   /gamesession:
@@ -104,13 +159,48 @@ paths:
                     type: integer
                     description: Gametime in Seconds
                     example: 300
+                  gamestate:
+                    type: string
+                    example: "lobby"
+                  huntedUser:
+                    type: string
+                    example: "637620d6af622b1c8dbf7f7e"
+                  borders:
+                    type: array
+                    description: array of geolocations
+                    example: {  lat: "5902302390", lng: "2349440234" }
+                    items:
+                      type: object
+                      properties:
+                        lat:
+                          type: string
+                        lng:
+                          type: string
         "400":
           description: Gamesession can not be created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
       security:
       - bearerAuth: []
   /gamesession/{gamesessionId}:
     get:
-      summary: Get all nessesary gamesession data but not the positions
+      summary: Get all nessesary gamesession data but not the positions, joins gamesession if not in it yet
       parameters:
       - name: gamesessionId
         in: path
@@ -129,6 +219,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  id:
+                    type: string
+                    example: "637620d6af622b1c8dbf7123"
                   creator:
                     type: string
                     example: "637620d6af622b1c8dbf7f7e"
@@ -152,9 +245,6 @@ paths:
                           type: string
                         lng:
                           type: string
-                  maximalUsers:
-                    type: integer
-                    description: maximum amount of users
                   huntedUser:
                     type: string
                     example: 637620d6af622b1c8dbf7f7e
@@ -170,6 +260,24 @@ paths:
                     example: "LOBBY"
         "404":
           description: Gamesession doesn't exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Gamesession not found"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
       security:
       - bearerAuth: []
     put:
@@ -200,6 +308,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  id:
+                    type: string
+                    example: "637620d6af622b1c8dbf7123"
                   creator:
                     type: string
                     example: "637620d6af622b1c8dbf7f7e"
@@ -215,19 +326,37 @@ paths:
                   borders:
                     type: array
                     description: get array of geolocations
+                    example: [{ lat: "3942032092", lng: "5959502021" }, {lat: "6464588856", lng: "65645787843" } ]
                     items:
                       type: object
-                      example: {  lat: "5902302390", lng: "2349440234" }
                       properties:
                         lat:
                           type: string
                         lng:
                           type: string
-                  maximalUsers:
-                    type: integer
-                    description: maximum amount of users
-        "404":
-          description: Gamesession does not exist
+                  huntedUser:
+                    type: string
+                    example: 637620d6af622b1c8dbf7f7e
+        "400":
+          description: Update failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "update failed"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
       security:
       - bearerAuth: []
     delete:
@@ -243,8 +372,28 @@ paths:
           type: string
           example: "637620d6af622b1c8dbf7f7e"
       responses:
-        "200":
+        "204":
           description: Ok
+        "400":
+          description: Delete failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Delete failed"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
       security:
         - bearerAuth: []
   /gamesession/{gamesessionId}/positions:
@@ -260,26 +409,53 @@ paths:
         schema:
           type: string
           example: "637620d6af622b1c8dbf7f7e"
+      requestBody:
+        description: New positional informations
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: { lat: "3942032092", lng: "5959502021" }
       responses:
-        "200":
+        "201":
           description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: string
+                      example: "637620d6af622b1c8dbf7f7e"
+                    lat:
+                      type: string
+                      example: "5902302390"
+                    lng:
+                      type: string
+                      example: "2349440234"
+        "400":
+          description: "Error sending or receiving positions"
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  positions:
-                    type: object
-                    example: { user: "637620d6af622b1c8dbf7f7e", lat: "5902302390", lng: "2349440234" }
-                    properties:
-                      user:
-                        type: string
-                      lat:
-                        type: string
-                      lng:
-                        type: string
-        "400":
-          description: "Gamesession does not exist"
+                  error:
+                    type: string
+                    example: "error message"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
       security:
       - bearerAuth: []
   /gamesession/{gamesessionId}/start:
@@ -298,6 +474,26 @@ paths:
       responses:
         "200":
           description: Gamesession will beginn, gamestate will update
+        "400":
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "error message"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
       security:
       - bearerAuth: []
   /gamesession/{gamesessionId}/finish:
@@ -311,16 +507,21 @@ paths:
         style: simple
         explode: false
         schema:
-          type: object
-          example: { user: "637620d6af622b1c8dbf7f7e", reason: "MrX found" }
-          properties:
-            user:
-              type: string
-            reason:
-              type: string
+          type: string
+          example: "637620d6af622b1c8dbf7f7e"
       responses:
         "200":
           description: Gamesession will stop, gamestate will update
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
       security:
       - bearerAuth: []
   /gamesession/{gamesessionId}/leave:
@@ -339,6 +540,18 @@ paths:
       responses:
         "200":
           description: Remove user from userlist
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
+      security:
+      - bearerAuth: []
   /gamesession/{gamesessionId}/ruleViolation:
     post:
       summary: Send own rule violation the notify all users in their next pull
@@ -355,6 +568,16 @@ paths:
       responses:
         "200":
           description: "todo"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "not authorized"
       security:
       - bearerAuth: []
 components:
