@@ -29,12 +29,12 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 	
 	GamesessionService.getGamesession(req, (error, gamesession) => {
 		if(gamesession){
-			const {id, creator, users, gametime, gamestate, huntedUser, borders, ...partialobject } = gamesession;
+			const {id, creator, users, gametime, gamestate, huntedUser, borders, sessionId, ...partialobject } = gamesession;
         	let newBorders = []
 			for (const element of borders) {
 				newBorders.push({lat:element.lat, lng:element.lng})
 			}
-			const subset = {id, creator, users, gametime, gamestate, huntedUser, borders:newBorders};
+			const subset = {id:sessionId, creator, users, gametime, gamestate, huntedUser, borders:newBorders};
 			return res.status(200).json(subset);
 		}
 		else{
