@@ -41,7 +41,7 @@ function getGamesession(req, callback){
 }
 
 function updateGamesession(gamesessionId, gamesessionData, callback) {
-  Gamesession.findById(gamesessionId, (error, gamesession) => {
+  Gamesession.findOne({"sessionId": gamesessionId}, (error, gamesession) => {
     if(error) return callback(error, null)
     if(gamesession) {
       if(gamesessionData.huntedUser) gamesession.huntedUser = gamesessionData.huntedUser
@@ -52,6 +52,7 @@ function updateGamesession(gamesessionId, gamesessionData, callback) {
         return callback(null, gamesession)
       })
     } else {
+        console.log("HUHHHHH")
       return callback(new Error("unknown gamesessionUpdate problem"), null)
     }
   })
@@ -113,7 +114,7 @@ function createGenerateValue(count, callback){
 }
 
 function deleteGamesession(gamesessionId, callback){  
-    Gamesession.deleteOne({'_id': gamesessionId}, (err, res) => {
+    Gamesession.deleteOne({'sessionId': gamesessionId}, (err, res) => {
         if(err){
             return callback(err, null);
         }
@@ -127,7 +128,7 @@ function deleteGamesession(gamesessionId, callback){
 }
 
 function removeUserFromSession(userId, gamesessionId, callback){
-    Gamesession.findById(gamesessionId, (err, gamesession) => {
+    Gamesession.findOne({'sessionId': gamesessionId}, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }
@@ -147,7 +148,7 @@ function removeUserFromSession(userId, gamesessionId, callback){
 }
 
 function changeState(gamesessionId, gamestate, reason, callback){  
-    Gamesession.findById(gamesessionId, (err, gamesession) => {
+    Gamesession.findById({'sessionId': gamesessionId}, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }

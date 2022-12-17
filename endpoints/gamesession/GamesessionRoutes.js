@@ -11,7 +11,6 @@ router.post('/', isAuthenticated, (req, res) => {
 		return res.status(500).json({error: error.message})
 	}
 	if(gamesession){
-		console.log(gamesession)
 		const {id, creator, users, gametime, gamestate, huntedUser, borders, ...partialobject } = gamesession;
         const subset = {id, creator, users, gametime, gamestate, huntedUser, borders};
 		subset.id = gamesession.sessionId
@@ -56,6 +55,7 @@ router.put('/:gamesessionId', isAuthenticated, (req, res) => {
 		return res.status(200).json(subset);
 	}
 	else{
+		console.log(error)
 		return res.status(400).json({error: "Update failed"});
 	}
   })
