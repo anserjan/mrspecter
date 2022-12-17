@@ -423,19 +423,26 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    userId:
-                      type: string
-                      example: "637620d6af622b1c8dbf7f7e"
-                    lat:
-                      type: string
-                      example: "5902302390"
-                    lng:
-                      type: string
-                      example: "2349440234"
+                type: object
+                properties:
+                  positions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                          example: "637620d6af622b1c8dbf7f7e"
+                        lat:
+                          type: string
+                          example: "5902302390"
+                        lng:
+                          type: string
+                          example: "2349440234"
+                  gamestate:
+                    type: string
+                    description: current state of the gamesession
+                    example: "LOBBY"
         "400":
           description: "Error sending or receiving positions"
           content:

@@ -1,4 +1,5 @@
 const UserPosition = require("./UserPositionModel")
+const GamesessionService = require("../gamesession/GamesessionService")
 
 function updatePosition(data, callback) {
   // first check for any position of this user in this gamesession
@@ -39,6 +40,16 @@ function updatePosition(data, callback) {
   })
 }
 
+function getGamestate(req, callback){
+  GamesessionService.getGamesession(req, (err, gamesession) => {
+    if(!gamesession){
+      callback(null)
+    }else{
+      callback(gamesession.gamestate)
+    }
+  })
+}
+
 function userHasPosition(userId, positionList) {
   if(positionList.length == 0) return null
   for(const position of positionList) {
@@ -61,4 +72,5 @@ function removeAttributesFromList(positionList) {
 
 module.exports = {
   updatePosition,
+  getGamestate
 }

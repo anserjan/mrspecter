@@ -8,7 +8,7 @@ const GamesessionModel = new Schema({
   users: [{type: Schema.ObjectId, ref: User}],
   gametime: { type: Number, default: 5000},
   starttime: { type: Date, default:null },
-  gamestate: { type: String, default: "lobby"},
+  gamestate: { type: String, default: "LOBBY"},
   maximumUsers:{ type: Number },
   reason: { type: String },
   borders: [{ lat : String, lng : String }],
