@@ -7,9 +7,14 @@ const PositionService = require("../userPosition/UserPositionService")
 router.post('/', isAuthenticated, (req, res) => {
 	
 	GamesessionService.create(req, (error, gamesession) => {
+	if(error){
+		return res.status(500).json({error: error.message})
+	}
 	if(gamesession){
+		console.log(gamesession)
 		const {id, creator, users, gametime, gamestate, huntedUser, borders, ...partialobject } = gamesession;
         const subset = {id, creator, users, gametime, gamestate, huntedUser, borders};
+		subset.id = gamesession.sessionId
 		return res.status(201).json(subset)
 	}
 	else{

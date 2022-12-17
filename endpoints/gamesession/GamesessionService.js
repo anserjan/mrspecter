@@ -19,7 +19,7 @@ function joinGamesession(userId, gamesessionId){
 }
 
 function getGamesession(req, callback){  
-    Gamesession.findById(req.params.gamesessionId, (err, gamesession) => {
+    Gamesession.findOne({"sessionId": req.params.gamesessionId}, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }
@@ -62,18 +62,54 @@ function create(req, callback){
         ...req.body,
         creator: req.authenticatedUser.id,
         users:[req.authenticatedUser.id]
-    }  
-    Gamesession.create(gamesession_object, (err, gamesession) => {
-        if(err){
-            return callback(err, null);
-        }
-        if(gamesession){
-            return callback(null, gamesession);
+    } 
+    createGenerateValue(0, (sessionId) => {
+        if(sessionId == null){
+            return callback(new Error("Sessions full"));
         }
         else{
-            return callback(new Error("Couldn't create"));
+            gamesession_object.sessionId = sessionId;
+            Gamesession.create(gamesession_object, (err, gamesession) => {
+                if(err){
+                    return callback(err, null);
+                }
+                if(gamesession){
+                    return callback(null, gamesession)
+                }
+                else{
+                    return callback(new Error("Couldn't create"));
+                }
+            })
         }
     })
+    
+}
+
+function createGenerateValue(count, callback){
+    if(count== 100000){
+        return callback(null);
+    }
+    else{
+        let1 = Math.floor(Math.random() * 10);
+    let2 = Math.floor(Math.random() * 10);
+    let3 = Math.floor(Math.random() * 10);
+    let4 = Math.floor(Math.random() * 10);
+    let5 = Math.floor(Math.random() * 10);
+    id = ""+let1+""+let2+""+let3+""+let4+""+let5;
+
+    Gamesession.findOne({"sessionId": id}, (err, session) => {
+        if(err){
+            return callback(null);
+        }
+        if(session){
+            return createGenerateValue(count++);
+        }
+        else{
+            return callback(id);
+        }
+    })
+    }
+    
 }
 
 function deleteGamesession(gamesessionId, callback){  
