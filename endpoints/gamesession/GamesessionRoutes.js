@@ -110,7 +110,7 @@ router.get('/:gamesessionId/leave', isAuthenticated, (req, res) => {
 
 router.post('/:gamesessionId/positions', isAuthenticated, (req, res) => {
 	if(!("lat" in req.body && "lng" in req.body)){
-		res.status(400).json({error: "lat & lng are required in body"})
+		return res.status(400).json({error: "lat & lng are required in body"})
 	}
 	posData = {
 		gamesessionId: req.params.gamesessionId,
@@ -119,7 +119,16 @@ router.post('/:gamesessionId/positions', isAuthenticated, (req, res) => {
 		lng: req.body.lng,
 	}
 	PositionService.updatePosition(posData, (err, pos) => {
-		if(pos) return res.status(201).json(pos)
+		if(pos) {
+			PositionService.getGamestate(req, (gamestate) =>{
+				if(!gamestate){
+					return res.status(400).json({error: "Could'n get gamestate"})
+				}else{
+					return res.status(201).json({positions: pos, gamestate: gamestate})
+				}
+			})
+			// return res.status(201).json(pos)
+		}
 		else{
 			return res.status(400).json({error: err})
 		}
