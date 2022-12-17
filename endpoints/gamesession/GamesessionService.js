@@ -148,7 +148,7 @@ function removeUserFromSession(userId, gamesessionId, callback){
 }
 
 function changeState(gamesessionId, gamestate, reason, callback){  
-    Gamesession.findById({'sessionId': gamesessionId}, (err, gamesession) => {
+    Gamesession.findOne({'sessionId': gamesessionId}, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }
