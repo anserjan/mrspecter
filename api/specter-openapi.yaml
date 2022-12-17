@@ -146,7 +146,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    example: "637620d6af622b1c8dbf7123"
+                    example: "12345"
                   creator:
                     type: string
                     example: "637620d6af622b1c8dbf7f7e"
@@ -221,7 +221,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    example: "637620d6af622b1c8dbf7123"
+                    example: "12345"
                   creator:
                     type: string
                     example: "637620d6af622b1c8dbf7f7e"
@@ -310,7 +310,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    example: "637620d6af622b1c8dbf7123"
+                    example: "12345"
                   creator:
                     type: string
                     example: "637620d6af622b1c8dbf7f7e"

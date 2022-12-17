@@ -19,7 +19,7 @@ function joinGamesession(userId, gamesessionId){
 }
 
 function getGamesession(req, callback){  
-    Gamesession.findById(req.params.gamesessionId, (err, gamesession) => {
+    Gamesession.findOne({"sessionId": req.params.gamesessionId}, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }
@@ -41,7 +41,7 @@ function getGamesession(req, callback){
 }
 
 function updateGamesession(gamesessionId, gamesessionData, callback) {
-  Gamesession.findById(gamesessionId, (error, gamesession) => {
+  Gamesession.findOne({"sessionId": gamesessionId}, (error, gamesession) => {
     if(error) return callback(error, null)
     if(gamesession) {
       if(gamesessionData.huntedUser) gamesession.huntedUser = gamesessionData.huntedUser
@@ -52,6 +52,7 @@ function updateGamesession(gamesessionId, gamesessionData, callback) {
         return callback(null, gamesession)
       })
     } else {
+        console.log("HUHHHHH")
       return callback(new Error("unknown gamesessionUpdate problem"), null)
     }
   })
@@ -62,22 +63,58 @@ function create(req, callback){
         ...req.body,
         creator: req.authenticatedUser.id,
         users:[req.authenticatedUser.id]
-    }  
-    Gamesession.create(gamesession_object, (err, gamesession) => {
-        if(err){
-            return callback(err, null);
-        }
-        if(gamesession){
-            return callback(null, gamesession);
+    } 
+    createGenerateValue(0, (sessionId) => {
+        if(sessionId == null){
+            return callback(new Error("Sessions full"));
         }
         else{
-            return callback(new Error("Couldn't create"));
+            gamesession_object.sessionId = sessionId;
+            Gamesession.create(gamesession_object, (err, gamesession) => {
+                if(err){
+                    return callback(err, null);
+                }
+                if(gamesession){
+                    return callback(null, gamesession)
+                }
+                else{
+                    return callback(new Error("Couldn't create"));
+                }
+            })
         }
     })
+    
+}
+
+function createGenerateValue(count, callback){
+    if(count== 100000){
+        return callback(null);
+    }
+    else{
+        let1 = Math.floor(Math.random() * 10);
+    let2 = Math.floor(Math.random() * 10);
+    let3 = Math.floor(Math.random() * 10);
+    let4 = Math.floor(Math.random() * 10);
+    let5 = Math.floor(Math.random() * 10);
+    id = ""+let1+""+let2+""+let3+""+let4+""+let5;
+
+    Gamesession.findOne({"sessionId": id}, (err, session) => {
+        if(err){
+            return callback(null);
+        }
+        if(session){
+            return createGenerateValue(count++);
+        }
+        else{
+            return callback(id);
+        }
+    })
+    }
+    
 }
 
 function deleteGamesession(gamesessionId, callback){  
-    Gamesession.deleteOne({'_id': gamesessionId}, (err, res) => {
+    Gamesession.deleteOne({'sessionId': gamesessionId}, (err, res) => {
         if(err){
             return callback(err, null);
         }
@@ -91,7 +128,7 @@ function deleteGamesession(gamesessionId, callback){
 }
 
 function removeUserFromSession(userId, gamesessionId, callback){
-    Gamesession.findById(gamesessionId, (err, gamesession) => {
+    Gamesession.findOne({'sessionId': gamesessionId}, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }
@@ -111,7 +148,7 @@ function removeUserFromSession(userId, gamesessionId, callback){
 }
 
 function changeState(gamesessionId, gamestate, reason, callback){  
-    Gamesession.findById(gamesessionId, (err, gamesession) => {
+    Gamesession.findById({'sessionId': gamesessionId}, (err, gamesession) => {
         if(err){
             return callback(err, null);
         }
