@@ -48,6 +48,7 @@ function updateGamesession(gamesessionId, gamesessionData, callback) {
       if(gamesessionData.gametime) gamesession.gametime = gamesessionData.gametime
       if(gamesessionData.borders) gamesession.borders = gamesessionData.borders
       if(gamesessionData.maximumUsers) gamesession.maximumUsers = gamesessionData.maximumUsers
+      if(gamesessionData.huntedRefreshTime) gamesession.huntedRefreshTime = gamesessionData.huntedRefreshTime
       gamesession.save().then(() => {
         return callback(null, gamesession)
       })
