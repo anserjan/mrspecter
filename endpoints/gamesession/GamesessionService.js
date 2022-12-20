@@ -156,6 +156,9 @@ function changeState(gamesessionId, gamestate, reason, callback){
         }
         if(gamesession){
             gamesession.gamestate = gamestate;
+            if(gamestate == "RUNNING"){
+                gamesession.starttime = Date.now()
+            }
             if(reason)gamesession.reason = reason;
             gamesession.save().then(() => {
                 return callback(null, gamesession);
