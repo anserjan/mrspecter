@@ -130,7 +130,7 @@ test("POST positions multiple times with one user /gamesession/:gamesessionId/po
     .post('/gamesession/')
     .set('Content-type', 'application/json')
     .set('Authorization', 'Bearer ' + testUser.auth_token)
-    .send()
+    .send({huntedRefreshTime: 0})
   gamesession = res.body
   
   res = await request(app)
@@ -193,8 +193,8 @@ test("POST multiple positions with multiple users /gamesession/:gamesessionId/po
   expect(res.body.gamestate).toBe("LOBBY")
   expect(res.body.positions.length).toBe(1)
   expect(res.body.positions[0]).toHaveProperty("userId", "lat", "lng")
-  expect(res.body.positions[0].lat).toContain("22222")
-  expect(res.body.positions[0].lng).toContain("33333")
+  expect(res.body.positions[0].lat).toContain("12355") //old positions for hunted User
+  expect(res.body.positions[0].lng).toContain("65444") //old positions for hunted User
   expect(res.body.positions[0].userId).toContain(testUser.id)
 
   // create second user

@@ -11,8 +11,8 @@ router.post('/', isAuthenticated, (req, res) => {
 		return res.status(500).json({error: error.message})
 	}
 	if(gamesession){
-		const {id, creator, users, gametime, gamestate, huntedUser, borders, huntedRefreshTime, ...partialobject } = gamesession;
-        const subset = {id, creator, users, gametime, gamestate, huntedUser, huntedRefreshTime, borders};
+		const {id, creator, users, gametime, gamestate, huntedUser, borders, huntedRefreshTime, starttime, ...partialobject } = gamesession;
+        const subset = {id, creator, users, gametime, gamestate, huntedUser, huntedRefreshTime, borders, starttime};
 		subset.id = gamesession.sessionId
 		return res.status(201).json(subset)
 	}
@@ -29,12 +29,16 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 	
 	GamesessionService.getGamesession(req, (error, gamesession) => {
 		if(gamesession){
-			const {id, creator, users, gametime, gamestate, huntedUser, borders, sessionId, huntedRefreshTime, starttime, ...partialobject } = gamesession;
+			let {creator, users, gametime, gamestate, huntedUser, borders, sessionId, huntedRefreshTime, starttime, ...partialobject } = gamesession;
         	let newBorders = []
 			for (const element of borders) {
 				newBorders.push({lat:element.lat, lng:element.lng})
 			}
-			const subset = {id:sessionId, creator, users, gametime, gamestate, huntedUser, huntedRefreshTime, borders:newBorders, starttime:starttime.getTime()};
+			if(starttime){
+				starttime = starttime.getTime()
+			}
+
+			const subset = {id:sessionId, creator, users, gametime, gamestate, huntedUser, huntedRefreshTime, borders:newBorders, starttime};
 			return res.status(200).json(subset);
 		}
 		else{
@@ -46,12 +50,12 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 router.put('/:gamesessionId', isAuthenticated, (req, res) => {
   GamesessionService.updateGamesession(req.params.gamesessionId, req.body,(error, gamesession) => {
 	if(gamesession){
-		const {id, creator, users, gametime, gamestate, huntedUser, borders, huntedRefreshTime, ...partialobject } = gamesession;
+		const {sessionId, creator, users, gametime, gamestate, huntedUser, borders, huntedRefreshTime, starttime, ...partialobject } = gamesession;
 		let newBorders = []
 		for (const element of borders) {
 			newBorders.push({lat:element.lat, lng:element.lng})
 		}
-		const subset = {id, creator, users, gametime, gamestate, huntedUser, huntedRefreshTime, borders:newBorders};
+		const subset = {id:sessionId, creator, users, gametime, gamestate, huntedUser, huntedRefreshTime, borders:newBorders, starttime};
 		return res.status(200).json(subset);
 	}
 	else{

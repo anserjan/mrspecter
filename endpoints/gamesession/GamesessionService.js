@@ -44,11 +44,11 @@ function updateGamesession(gamesessionId, gamesessionData, callback) {
   Gamesession.findOne({"sessionId": gamesessionId}, (error, gamesession) => {
     if(error) return callback(error, null)
     if(gamesession) {
-      if(gamesessionData.huntedUser) gamesession.huntedUser = gamesessionData.huntedUser
-      if(gamesessionData.gametime) gamesession.gametime = gamesessionData.gametime
-      if(gamesessionData.borders) gamesession.borders = gamesessionData.borders
-      if(gamesessionData.maximumUsers) gamesession.maximumUsers = gamesessionData.maximumUsers
-      if(gamesessionData.huntedRefreshTime) gamesession.huntedRefreshTime = gamesessionData.huntedRefreshTime
+      if(gamesessionData.huntedUser != null) gamesession.huntedUser = gamesessionData.huntedUser
+      if(gamesessionData.gametime != null) gamesession.gametime = gamesessionData.gametime
+      if(gamesessionData.borders != null) gamesession.borders = gamesessionData.borders
+      if(gamesessionData.maximumUsers != null) gamesession.maximumUsers = gamesessionData.maximumUsers
+      if(gamesessionData.huntedRefreshTime != null) gamesession.huntedRefreshTime = gamesessionData.huntedRefreshTime
       gamesession.save().then(() => {
         return callback(null, gamesession)
       })
