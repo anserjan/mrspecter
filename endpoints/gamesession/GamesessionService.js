@@ -63,7 +63,8 @@ function create(req, callback){
     let gamesession_object = {
         ...req.body,
         creator: req.authenticatedUser.id,
-        users:[req.authenticatedUser.id]
+        users:[req.authenticatedUser.id],
+        huntedUser: req.authenticatedUser.id
     } 
     createGenerateValue(0, (sessionId) => {
         if(sessionId == null){
