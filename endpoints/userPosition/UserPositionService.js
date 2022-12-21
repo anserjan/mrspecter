@@ -16,6 +16,10 @@ function updatePosition(data, callback) {
           if (!gamesession || err) {
             return callback(err, null)
           }
+          if (gamesession.starttime && gamesession.starttime / 1000 + gamesession.gametime < Date.now() / 1000) {
+            gamesession.gamestate = "FINISHED"
+            gamesession.save()
+          }
           if (data.userId == gamesession.huntedUser) { // hunted User
             // update position if huntedRefreshTime has passed sinced last update and get a list of all positions again
             UserPosition.findOne({ _id: oldPositionOfCurrentUser._id }, (error, userPosition) => {
