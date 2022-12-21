@@ -12,7 +12,7 @@ const sessionIdValidator = (v) => {
 const GamesessionModel = new Schema({
   creator: { type: Schema.ObjectId, ref: User, required: true },
   users: [{type: Schema.ObjectId, ref: User}],
-  gametime: { type: Number, default: 5000},
+  gametime: { type: Number, default: 600},
   huntedRefreshTime: { type: Number, default: 30},
   starttime: { type: Date, default:null },
   gamestate: { type: String, default: "LOBBY"},
