@@ -16,8 +16,9 @@ function updatePosition(data, callback) {
           if (!gamesession || err) {
             return callback(err, null)
           }
-          if (gamesession.starttime && gamesession.starttime / 1000 + gamesession.gametime < Date.now() / 1000) {
+          if (gamesession.gamestate != "FINISHED" && gamesession.starttime && gamesession.starttime / 1000 + gamesession.gametime < Date.now() / 1000) {
             gamesession.gamestate = "FINISHED"
+            gamesession.reason = "Time is over!"
             gamesession.save()
           }
           if (data.userId == gamesession.huntedUser) { // hunted User
