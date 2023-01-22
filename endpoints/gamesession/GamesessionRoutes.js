@@ -4,6 +4,7 @@ const GamesessionService = require("./GamesessionService")
 const { isAuthenticated } = require("./AuthenticationService")
 const PositionService = require("../userPosition/UserPositionService")
 const userModel = require("../user/userModel")
+const GamesessionModel = require("./GamesessionModel")
 
 router.post('/', isAuthenticated, (req, res) => {
 
@@ -30,7 +31,7 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 
 	GamesessionService.getGamesession(req, (error, gamesession) => {
 		if (gamesession) {
-			let { creator, users, gametime, gamestate, huntedUser, borders, sessionId, huntedRefreshTime, starttime, reason, ...partialobject } = gamesession;
+			let { creator, users, gametime, gamestate, huntedUser, borders, sessionId, huntedRefreshTime, starttime, reason, ruleViolations, ...partialobject } = gamesession;
 			let newBorders = []
 			for (const element of borders) {
 				newBorders.push({ lat: element.lat, lng: element.lng })
@@ -39,7 +40,7 @@ router.get('/:gamesessionId', isAuthenticated, (req, res) => {
 				starttime = starttime.getTime()
 			}
 
-			const subset = { id: sessionId, creator, users, gametime, gamestate, huntedUser, huntedRefreshTime, borders: newBorders, starttime, reason };
+			const subset = { id: sessionId, creator, users, gametime, gamestate, huntedUser, huntedRefreshTime, borders: newBorders, starttime, reason, ruleViolations };
 			return res.status(200).json(subset);
 		}
 		else {
@@ -131,6 +132,7 @@ router.post('/:gamesessionId/positions', isAuthenticated, (req, res) => {
 		lat: req.body.lat,
 		lng: req.body.lng,
 	}
+
 	PositionService.updatePosition(posData, (err, pos) => {
 		if (pos) {
 			PositionService.getGamestate(req, (gamestate) => {
@@ -144,6 +146,43 @@ router.post('/:gamesessionId/positions', isAuthenticated, (req, res) => {
 		}
 		else {
 			return res.status(400).json({ error: err })
+		}
+	})
+})
+
+router.post('/:gamesessionId/ruleViolation', isAuthenticated, (req, res) => {
+	if (!("borderViolationTime" in req.body)) {
+		return res.status(400).json({ error: "borderViolationTime is required in body" })
+	}
+	data = {
+		gamesessionId: req.params.gamesessionId,
+		userId: req.authenticatedUser.id,
+		borderViolationTime: req.body.borderViolationTime,
+	}
+
+	GamesessionModel.findOne({ 'sessionId': data.gamesessionId }, (err, gamesession) => {
+		if (err) {
+			return callback(err, null);
+		}
+		if (gamesession) {
+			var found = false;
+			for (var i = 0; i < gamesession.ruleViolations.length; i++) {
+				if (gamesession.ruleViolations[i].userId == data.userId) {
+					found = true;
+					gamesession.ruleViolations[i].borderViolationTime = data.borderViolationTime
+					break;
+				}
+			}
+			if (!found) {
+				gamesession.ruleViolations.push({ userId: data.userId, borderViolationTime: data.borderViolationTime })
+			}
+
+			gamesession.save().then(() => {
+				return res.status(200).json({ description: "Rule violations updated" })
+			})
+		}
+		else {
+			return callback(new Error("404"));
 		}
 	})
 })
