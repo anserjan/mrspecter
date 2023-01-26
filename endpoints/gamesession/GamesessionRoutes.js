@@ -5,6 +5,7 @@ const { isAuthenticated } = require("./AuthenticationService")
 const PositionService = require("../userPosition/UserPositionService")
 const userModel = require("../user/userModel")
 const GamesessionModel = require("./GamesessionModel")
+const UserHistory = require("../userHistory/UserHistoryModel")
 
 router.post('/', isAuthenticated, (req, res) => {
 
@@ -147,6 +148,24 @@ router.post('/:gamesessionId/positions', isAuthenticated, (req, res) => {
 		else {
 			return res.status(400).json({ error: err })
 		}
+	})
+})
+
+//https://stackoverflow.com/questions/51448196/mongoose-group-by-field-and-grouped-result-should-be-stored-as-groupname-object
+router.get('/:gamesessionId/locationHistory', isAuthenticated, (req, res) => {
+	userID = req.authenticatedUser.id;
+	UserHistory.aggregate([
+		{
+			$group: {
+				_id: "$userId",
+				locations: { $push: { lat: "$lat", lng: "$lng" } }
+			}
+		}
+	], (err, result) => {
+		if (err) {
+			return res.status(400).json({ error: err });
+		}
+		return res.status(200).json(result);
 	})
 })
 
