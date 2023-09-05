@@ -5,6 +5,7 @@ const gamesessionRoutes = require("./endpoints/gamesession/GamesessionRoutes")
 const database = require('./database/db')
 
 const app = express()
+const config = require('./config/default')
 const port = 8080
 const User = require('./endpoints/user/userModel')
 
@@ -29,7 +30,7 @@ database.initDb(function(err, db){
 
 
 function startExpressServer(){
-  app.listen(port, () => console.info(`Example app listening on http://localhost:${port}!`))
+  app.listen(port, () => console.info(`MrSpecter Server running at mrspecter.de:${port}`))
 }
 
 
@@ -42,8 +43,8 @@ function createAdmin() {
     } else {
       User.create(
         {
-          "name": "admin",
-          "password": "123",
+          "name": config.adminCredentials.name,
+          "password": config.adminCredentials.password,
           "isAdministrator": true
         }, (error) => {
           if(error) {

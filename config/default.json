@@ -8,5 +8,9 @@
     },
     "session": {
         "tokenKey": "changeWhenDeployed"
+    },
+    "adminCredentials": {
+      "name": "admin",
+      "password": "U@L3^VrYP9oR4tZx@#7g3zyn"
     }
 }
